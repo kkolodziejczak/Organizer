@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/miCompose"
+        android:icon="@drawable/ic_compose"
+        app:showAsAction="ifRoom"
+        android:title="Compose"
+        android:visible="true">
+    </item>
+    <item
+        android:id="@+id/przycisk1"
+        android:icon="@drawable/ic_action_name"
+        app:showAsAction="ifRoom"
+        android:title="droga"
+        android:visible="true">
+    </item>
+    <item
+        android:id="@+id/przycisk2"
+        android:icon="@drawable/ic_compose"
+        app:showAsAction="ifRoom"
+        android:title="kalendarz">
+    </item>
+
+</menu>
