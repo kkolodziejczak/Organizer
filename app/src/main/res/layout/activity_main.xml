@@ -13,13 +13,10 @@
     android:orientation="vertical"
     android:weightSum="3">
 
-    <android.support.v7.widget.Toolbar
+    <include
+        layout="@layout/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/toolbar4" />
+        android:layout_height="wrap_content" />
 
     <Button
         android:text=""

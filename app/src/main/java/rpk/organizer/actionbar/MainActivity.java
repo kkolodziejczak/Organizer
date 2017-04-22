@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 mIntent = new Intent(this, DayView.class);
                 break;
             case R.id.myPlaceAction:
-
+                mIntent = new Intent(this, MyPlacesActivity.class);
                 break;
         }
         if (mIntent != null) {
@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void myplacesStartClick(View view) {
-
+        Intent intent = new Intent(this, MyPlacesActivity.class);
+        startActivity(intent);
     }
 
     public void LoadDataToClasses(){
