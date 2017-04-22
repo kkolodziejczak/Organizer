@@ -1,8 +1,5 @@
 package rpk.organizer.actionbar;
 
-/**
- * Created by Themo on 2017-04-22.
- */
 public class EventInfo {
     private String who;
     private String what;

@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import rpk.organizer.actionbar.Utils.EventList;
 
-
+//Fragment
 public class Calendar extends AppCompatActivity {
     private ListView EventListView;
     private Context mContext;

@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("LUL");
+        
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment frag=null;
         Class fragmentClass;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentClass = Default.class;
                 break;
             case R.id.calendarAction:
-                fragmentClass = Default.class;
+                fragmentClass = DayView.class;
                 break;
             case R.id.myPlaceAction:
                 fragmentClass = MyPlacesActivity.class;
