@@ -27,7 +27,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/button5"
         android:background="@drawable/bitch"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:onClick="przejdzdoCalendar"/>
 
     <Button
         android:text=""
