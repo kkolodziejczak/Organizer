@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import rpk.organizer.actionbar.Utils.EventList;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("LUL");
+        LoadDataToClasses();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,5 +55,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void myplacesStartClick(View view) {
 
+    }
+
+    public void LoadDataToClasses(){
+        for(int i =0;i<50;i++)
+            EventList.addEvent(new EventInfo("Ktos","Meeting","Kojama"+i,"8:15"));
     }
 }

@@ -39,4 +39,5 @@
         android:layout_margin="30dp"
         app:layout_anchor="@id/EventList"
         app:layout_anchorGravity="bottom|right|end" />
+
 </android.support.design.widget.CoordinatorLayout>

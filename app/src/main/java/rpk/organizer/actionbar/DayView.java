@@ -7,12 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
+import rpk.organizer.actionbar.Utils.EventList;
 
 public class DayView extends AppCompatActivity {
-
-    private List<EventInfo> ListaEventow;
     private ListView EventListView;
     private Context mContext;
 
@@ -22,7 +19,7 @@ public class DayView extends AppCompatActivity {
         setContentView(R.layout.activity_day_view);
 
         mContext = this;
-        ListaEventow = new ArrayList<>();
+        EventListView = (ListView)findViewById(R.id.EventList);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
@@ -38,15 +35,7 @@ public class DayView extends AppCompatActivity {
     }
 
     private void populateList(){
-        ListaEventow.add(new EventInfo("Ktos", "Meeting", "Kojama","8:00"));
-        ListaEventow.add(new EventInfo("Ktos2", "Meeting23", "Kojama","8:15"));
-        ListaEventow.add(new EventInfo("Ktos3", "Meeting123", "Kojama","8:45"));
-        ListaEventow.add(new EventInfo("Ktos4", "Meeting1234", "Kojama","8:49"));
-
-        EventListView = (ListView)findViewById(R.id.EventList);
-
-        EventAdapter adapter = new EventAdapter(mContext, ListaEventow);
-
+        EventAdapter adapter = new EventAdapter(mContext, EventList.getEvents());
         EventListView.setAdapter(adapter);
     }
 
