@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void LoadDataToClasses(){
-        for(int i =0;i<50;i++)
+        for(int i =0;i<15;i++)
             EventList.addEvent(new EventInfo("Ktos","Meeting","Kojama"+i,"8:15"));
     }
 }
