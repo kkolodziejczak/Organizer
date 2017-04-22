@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mapAction"
-        android:icon="@drawable/ic_compose"
+        android:icon="@drawable/ic_mapka"
         app:showAsAction="ifRoom"
         android:title="mapa"
         android:visible="true">
     </item>
     <item
         android:id="@+id/calendarAction"
-        android:icon="@drawable/ic_action_name"
+        android:icon="@drawable/ic_kalendarz"
         app:showAsAction="ifRoom"
         android:title="kalendarz"
         android:visible="true">
@@ -18,7 +18,7 @@
     </item>
     <item
         android:id="@+id/myPlaceAction"
-        android:icon="@drawable/ic_compose"
+        android:icon="@drawable/ic_majplejs"
         app:showAsAction="ifRoom"
         android:title="droga"
         android:visible="true">
