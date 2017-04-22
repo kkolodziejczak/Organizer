@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch(item.getItemId()) {
             case R.id.mapAction:
-                mIntent = new Intent(this, ShortestWayActivity.class);
+                mIntent = new Intent(this, MapsActivity.class);
                 break;
             case R.id.calendarAction:
                 mIntent = new Intent(this, DayView.class);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void mapStartClick(View view) {
-        Intent intent = new Intent(this, ShortestWayActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 
