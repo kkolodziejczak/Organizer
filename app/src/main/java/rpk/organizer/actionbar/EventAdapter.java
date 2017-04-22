@@ -9,16 +9,14 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import rpk.organizer.actionbar.EventInfo;
-import rpk.organizer.actionbar.R;
-
-/**
- * Created by Themo on 2017-04-22.
- */
-
-public class EventAdapter extends BaseAdapter {
+class EventAdapter extends BaseAdapter {
     private Context mContext;
     private List<EventInfo> mListEvents;
+
+    EventAdapter(Context context, List<EventInfo> list){
+        this.mContext = context;
+        this.mListEvents = list;
+    }
 
     @Override
     public int getCount() {
