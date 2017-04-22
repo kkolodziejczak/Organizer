@@ -27,8 +27,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/button5"
         android:background="@drawable/bitch"
-        android:layout_weight="1"
-        android:onClick="przejdzdoCalendar"/>
+        android:onClick="mapStartClick"
+        android:layout_weight="1"/>
 
     <Button
         android:text=""
@@ -36,6 +36,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/button6"
         android:background="@drawable/ebola"
+        android:onClick="calendarStartClick"
         android:layout_weight="1"/>
 
     <Button
@@ -44,6 +45,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/button7"
         android:background="@drawable/jc"
+        android:onClick="myplacesStartClick"
         android:layout_weight="1"/>
 
 </LinearLayout>

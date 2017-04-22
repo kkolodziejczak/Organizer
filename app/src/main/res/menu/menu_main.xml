@@ -2,24 +2,26 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/miCompose"
+        android:id="@+id/mapAction"
         android:icon="@drawable/ic_compose"
         app:showAsAction="ifRoom"
-        android:title="Compose"
+        android:title="mapa"
         android:visible="true">
     </item>
     <item
-        android:id="@+id/przycisk1"
+        android:id="@+id/calendarAction"
         android:icon="@drawable/ic_action_name"
+        app:showAsAction="ifRoom"
+        android:title="kalendarz"
+        android:visible="true">
+
+    </item>
+    <item
+        android:id="@+id/myPlaceAction"
+        android:icon="@drawable/ic_compose"
         app:showAsAction="ifRoom"
         android:title="droga"
         android:visible="true">
-    </item>
-    <item
-        android:id="@+id/przycisk2"
-        android:icon="@drawable/ic_compose"
-        app:showAsAction="ifRoom"
-        android:title="kalendarz">
     </item>
 
 </menu>
