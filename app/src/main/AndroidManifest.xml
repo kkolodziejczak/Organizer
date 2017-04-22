@@ -24,7 +24,6 @@
         </activity>
         <activity android:name=".Calendar" />
         <activity android:name=".DayView" />
-        <activity android:name=".ShortestWayActivity" />
         <!--
              The API key for Google Maps-based APIs.
         -->
