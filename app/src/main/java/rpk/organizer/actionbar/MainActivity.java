@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("LUL");
@@ -32,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
             return(true);
         case R.id.calendarAction:
-            setContentView(R.layout.activity_calendar);
+            Intent intent = new Intent(this, DayView.class);
+            startActivity(intent);
             return(true);
         case R.id.myPlaceAction:
 

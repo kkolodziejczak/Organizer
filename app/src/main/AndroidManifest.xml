@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Calendar" />
+        <activity android:name=".DayView"></activity>
         <activity android:name=".ShortestWayActivity"></activity>
     </application>
 
