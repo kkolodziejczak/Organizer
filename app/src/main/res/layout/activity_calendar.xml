@@ -5,17 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="rpk.organizer.actionbar.Calendar">
-    <include
-        layout="@layout/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/include" />
 
     <CalendarView
         android:id="@+id/Calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/include" />
+     />
 
         <ListView
             android:id="@+id/EventList"

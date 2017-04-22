@@ -44,8 +44,9 @@ public class Default extends Fragment implements View.OnClickListener{
                 startActivity(intent);
                 break;
             case R.id.button6:
-                intent = new Intent(getActivity(), Calendar.class);
-                startActivity(intent);
+                //TODO: zmianieć na framgent!
+//                intent = new Intent(getActivity(), Calendar.class);
+//                startActivity(intent);
                 break;
             case R.id.button7:
 
