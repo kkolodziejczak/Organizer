@@ -1,6 +1,8 @@
 package rpk.organizer.actionbar;
 
-import android.content.Intent;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,17 +13,26 @@ import android.view.View;
 import rpk.organizer.actionbar.Utils.EventList;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("LUL");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment frag=null;
+        Class fragmentClass;
+        fragmentClass = Default.class;
+        try {
+            frag = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        fragmentManager.beginTransaction().replace(R.id.frame,frag ).commit();
         LoadDataToClasses();
     }
+
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -30,39 +41,29 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent mIntent = null;
-
+        Fragment frag=null;
+        Class fragmentClass;
         switch(item.getItemId()) {
             case R.id.mapAction:
-                mIntent = new Intent(this, ShortestWayActivity.class);
+                fragmentClass = Default.class;
                 break;
             case R.id.calendarAction:
-                mIntent = new Intent(this, DayView.class);
+                fragmentClass = Default.class;
                 break;
             case R.id.myPlaceAction:
-                mIntent = new Intent(this, MyPlacesActivity.class);
+                fragmentClass = MyPlacesActivity.class;
                 break;
+            default:
+                fragmentClass = Default.class;
         }
-        if (mIntent != null) {
-            startActivity(mIntent);
-            return true;
+        try {
+            frag = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
         return false;
-    }
-
-    public void mapStartClick(View view) {
-        Intent intent = new Intent(this, ShortestWayActivity.class);
-        startActivity(intent);
-    }
-
-    public void calendarStartClick(View view) {
-        Intent intent = new Intent(this, Calendar.class);
-        startActivity(intent);
-    }
-
-    public void myplacesStartClick(View view) {
-        Intent intent = new Intent(this, MyPlacesActivity.class);
-        startActivity(intent);
     }
 
     public void LoadDataToClasses(){
