@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class Calendar extends AppCompatActivity {
-    private List<EventInfo> ListaEventów;
+    private List<EventInfo> ListaEventow;
     private ListView EventListView;
     private Context mContext;
     @Override
@@ -20,7 +20,7 @@ public class Calendar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         mContext = this;
-        ListaEventów = new ArrayList<>();
+        ListaEventow = new ArrayList<>();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
@@ -36,14 +36,14 @@ public class Calendar extends AppCompatActivity {
     }
 
     private void populateList(){
-        ListaEventów.add(new EventInfo("Ktos", "Meeting", "Kojama","8:00"));
-        ListaEventów.add(new EventInfo("Ktos2", "Meeting23", "Kojama","8:15"));
-        ListaEventów.add(new EventInfo("Ktos3", "Meeting123", "Kojama","8:45"));
-        ListaEventów.add(new EventInfo("Ktos4", "Meeting1234", "Kojama","8:49"));
+        ListaEventow.add(new EventInfo("Ktos", "Meeting", "Kojama","8:00"));
+        ListaEventow.add(new EventInfo("Ktos2", "Meeting23", "Kojama","8:15"));
+        ListaEventow.add(new EventInfo("Ktos3", "Meeting123", "Kojama","8:45"));
+        ListaEventow.add(new EventInfo("Ktos4", "Meeting1234", "Kojama","8:49"));
 
         EventListView = (ListView)findViewById(R.id.EventList);
 
-        EventAdapter adapter = new EventAdapter(mContext,ListaEventów);
+        EventAdapter adapter = new EventAdapter(mContext, ListaEventow);
 
         EventListView.setAdapter(adapter);
     }
