@@ -26,19 +26,26 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
-        case R.id.mapAction:
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent mIntent = null;
 
-            return(true);
-        case R.id.calendarAction:
-            Intent intent = new Intent(this, DayView.class);
-            startActivity(intent);
-            return(true);
-        case R.id.myPlaceAction:
+        switch(item.getItemId()) {
+            case R.id.mapAction:
+                mIntent = new Intent(this, ShortestWayActivity.class);
+                break;
+            case R.id.calendarAction:
+                mIntent = new Intent(this, DayView.class);
+                break;
+            case R.id.myPlaceAction:
 
-            return(true);
-    }
-        return(super.onOptionsItemSelected(item));
+                break;
+        }
+        if (mIntent != null) {
+            startActivity(mIntent);
+            return true;
+        }
+        return false;
+        //return(super.onOptionsItemSelected(item));
     }
 
     public void mapStartClick(View view) {
