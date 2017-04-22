@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
             return(true);
         case R.id.calendarAction:
-            setContentView(R.layout.calendar);
+            setContentView(R.layout.activity_calendar);
             return(true);
         case R.id.myPlaceAction:
 
