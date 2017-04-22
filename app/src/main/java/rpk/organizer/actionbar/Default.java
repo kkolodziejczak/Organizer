@@ -40,7 +40,7 @@ public class Default extends Fragment implements View.OnClickListener{
         Intent intent;
         switch (v.getId()) {
             case R.id.button5:
-                intent = new Intent(getActivity(), ShortestWayActivity.class);
+                intent = new Intent(getActivity(), MapsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button6:
