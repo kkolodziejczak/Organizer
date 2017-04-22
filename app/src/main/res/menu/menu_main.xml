@@ -9,17 +9,19 @@
         android:visible="true">
     </item>
     <item
-        android:id="@+id/myPlaceAction"
+        android:id="@+id/calendarAction"
         android:icon="@drawable/ic_action_name"
+        app:showAsAction="ifRoom"
+        android:title="kalendarz"
+        android:visible="true">
+
+    </item>
+    <item
+        android:id="@+id/myPlaceAction"
+        android:icon="@drawable/ic_compose"
         app:showAsAction="ifRoom"
         android:title="droga"
         android:visible="true">
-    </item>
-    <item
-        android:id="@+id/calendarAction"
-        android:icon="@drawable/ic_compose"
-        app:showAsAction="ifRoom"
-        android:title="kalendarz">
     </item>
 
 </menu>
