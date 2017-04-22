@@ -18,9 +18,10 @@
         <activity android:name=".Calendar" />
         <activity android:name=".DayView" />
         <activity android:name=".ShortestWayActivity" />
-        <activity android:name=".MyPlacesActivity" android:parentActivityName=".MainActivity"><meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="rpk.organizer.actionbar.MainActivity" /></activity>
+        <activity android:name=".MyPlacesActivity"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA1tgI2_kxshDT-Zgv64G7NHQIZUfKI5xk"/>
     </application>
 
 </manifest>
