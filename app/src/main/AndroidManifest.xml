@@ -19,6 +19,9 @@
         <activity android:name=".DayView" />
         <activity android:name=".ShortestWayActivity" />
         <activity android:name=".MyPlacesActivity"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA1tgI2_kxshDT-Zgv64G7NHQIZUfKI5xk"/>
     </application>
 
 </manifest>
