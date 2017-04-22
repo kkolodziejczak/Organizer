@@ -48,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return false;
-        //return(super.onOptionsItemSelected(item));
     }
 
     public void mapStartClick(View view) {
-
+        Intent intent = new Intent(this, ShortestWayActivity.class);
+        startActivity(intent);
     }
 
     public void calendarStartClick(View view) {
