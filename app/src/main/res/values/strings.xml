@@ -1,4 +1,5 @@
 <resources>
+    <string name="google_maps_key">AIzaSyA1tgI2_kxshDT-Zgv64G7NHQIZUfKI5xk</string>
     <string name="app_name">ActionBar</string>
     <string name="test1">Test1</string>
     <string name="test2">Test2</string>
