@@ -38,7 +38,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ShortesPathActivity extends Fragment implements LocationAssistant.Listener, OnMapReadyCallback {
+public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, OnMapReadyCallback {
 
     private TextView tvLocation;
     private LocationAssistant assistant;

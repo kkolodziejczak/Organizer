@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(item.getItemId()) {
             case R.id.mapAction:
-                fragmentClass = ShortesPathActivity.class;
+                fragmentClass = ShortestPathActivity.class;
                 break;
             case R.id.calendarAction:
                 fragmentClass = Calendar.class;
