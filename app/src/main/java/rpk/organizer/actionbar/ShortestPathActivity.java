@@ -48,7 +48,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.shortest_path,container,false);
+        return inflater.inflate(R.layout.shortest_path, container, false);
     }
 
     @Override
@@ -61,12 +61,12 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         tvLocation.setText(getString(R.string.empty));
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-         map = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        map = (SupportMapFragment) fm.findFragmentById(R.id.map);
         if (map == null) {
             map = SupportMapFragment.newInstance();
             fm.beginTransaction().replace(R.id.map, map).commit();
         }
-         map.getMapAsync(this);
+        map.getMapAsync(this);
 
     }
 
@@ -191,6 +191,5 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
     }
 }
