@@ -22,13 +22,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.TextView;
 
-public class ShortesPathActivity extends Activity implements LocationAssistant.Listener {
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+public class ShortesPathActivity extends FragmentActivity implements LocationAssistant.Listener, OnMapReadyCallback {
 
     private TextView tvLocation;
     private LocationAssistant assistant;
+    private SupportMapFragment map;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,10 @@ public class ShortesPathActivity extends Activity implements LocationAssistant.L
         setContentView(R.layout.shortest_path);
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvLocation.setText(getString(R.string.empty));
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -139,6 +153,12 @@ public class ShortesPathActivity extends Activity implements LocationAssistant.L
         if (location == null) return;
         tvLocation.setOnClickListener(null);
         tvLocation.setText(location.getLongitude() + "\n" + location.getLatitude());
+        if (assistant.getBestLocation() != null) {
+            mMap.clear();
+            LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(sydney).title(""));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
     }
@@ -152,5 +172,11 @@ public class ShortesPathActivity extends Activity implements LocationAssistant.L
     @Override
     public void onError(LocationAssistant.ErrorType type, String message) {
         tvLocation.setText(getString(R.string.error));
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
     }
 }
