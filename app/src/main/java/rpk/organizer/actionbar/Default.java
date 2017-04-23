@@ -37,8 +37,8 @@ public class Default extends Fragment implements View.OnClickListener{
         Intent intent;
         switch (v.getId()) {
             case R.id.button5:
-                intent = new Intent(getActivity(), ShortesPathActivity.class);
-                startActivity(intent);
+//                intent = new Intent(getActivity(), ShortesPathActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.button6:
                 //TODO: zmianieć na framgent!
