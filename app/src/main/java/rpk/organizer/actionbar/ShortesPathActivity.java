@@ -25,7 +25,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-public class MapsActivity extends Activity implements LocationAssistant.Listener {
+public class ShortesPathActivity extends Activity implements LocationAssistant.Listener {
 
     private TextView tvLocation;
     private LocationAssistant assistant;
@@ -37,7 +37,7 @@ public class MapsActivity extends Activity implements LocationAssistant.Listener
         assistant = new LocationAssistant(this, this, LocationAssistant.Accuracy.HIGH, 5000, false);
         assistant.setVerbose(true);
 
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.shortest_path);
         tvLocation = (TextView) findViewById(R.id.tvLocation);
         tvLocation.setText(getString(R.string.empty));
     }

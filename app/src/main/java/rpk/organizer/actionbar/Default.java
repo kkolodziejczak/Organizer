@@ -3,14 +3,11 @@ package rpk.organizer.actionbar;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import rpk.organizer.actionbar.R;
 
 public class Default extends Fragment implements View.OnClickListener{
     public Button res1, res2,res3;
@@ -40,7 +37,7 @@ public class Default extends Fragment implements View.OnClickListener{
         Intent intent;
         switch (v.getId()) {
             case R.id.button5:
-                intent = new Intent(getActivity(), MapsActivity.class);
+                intent = new Intent(getActivity(), ShortesPathActivity.class);
                 startActivity(intent);
                 break;
             case R.id.button6:
