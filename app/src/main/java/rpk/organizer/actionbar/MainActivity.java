@@ -48,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
         Class fragmentClass;
         switch(item.getItemId()) {
             case R.id.mapAction:
-                fragmentClass = Default.class;
+                fragmentClass = ShortesPathActivity.class;
                 break;
             case R.id.calendarAction:
                 fragmentClass = Calendar.class;
                 break;
             case R.id.myPlaceAction:
-                fragmentClass = MyPlacesActivity.class;
+                fragmentClass = Default.class;
                 break;
             default:
                 fragmentClass = Default.class;

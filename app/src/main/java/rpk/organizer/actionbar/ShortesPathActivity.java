@@ -22,8 +22,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,37 +38,46 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ShortesPathActivity extends FragmentActivity implements LocationAssistant.Listener, OnMapReadyCallback {
+public class ShortesPathActivity extends Fragment implements LocationAssistant.Listener, OnMapReadyCallback {
 
     private TextView tvLocation;
     private LocationAssistant assistant;
     private SupportMapFragment map;
     private GoogleMap mMap;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        assistant = new LocationAssistant(this, this, LocationAssistant.Accuracy.HIGH, 5000, false);
-        assistant.setVerbose(true);
-
-        setContentView(R.layout.shortest_path);
-        tvLocation = (TextView) findViewById(R.id.tvLocation);
-        tvLocation.setText(getString(R.string.empty));
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.shortest_path,container,false);
     }
 
     @Override
-    protected void onResume() {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
+        assistant.setVerbose(true);
+
+        tvLocation = (TextView) getView().findViewById(R.id.tvLocation);
+        tvLocation.setText(getString(R.string.empty));
+
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+         map = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        if (map == null) {
+            map = SupportMapFragment.newInstance();
+            fm.beginTransaction().replace(R.id.map, map).commit();
+        }
+         map.getMapAsync(this);
+
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
         assistant.start();
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         assistant.stop();
         super.onPause();
     }
@@ -75,7 +89,7 @@ public class ShortesPathActivity extends FragmentActivity implements LocationAss
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         assistant.onActivityResult(requestCode, resultCode);
     }
 
@@ -93,7 +107,7 @@ public class ShortesPathActivity extends FragmentActivity implements LocationAss
 
     @Override
     public void onExplainLocationPermission() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.permissionExplanation)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -120,7 +134,7 @@ public class ShortesPathActivity extends FragmentActivity implements LocationAss
     @Override
     public void onLocationPermissionPermanentlyDeclined(View.OnClickListener fromView,
                                                         DialogInterface.OnClickListener fromDialog) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.permissionPermanentlyDeclined)
                 .setPositiveButton(R.string.ok, fromDialog)
                 .show();
@@ -128,7 +142,7 @@ public class ShortesPathActivity extends FragmentActivity implements LocationAss
 
     @Override
     public void onNeedLocationSettingsChange() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.switchOnLocationShort)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -142,7 +156,7 @@ public class ShortesPathActivity extends FragmentActivity implements LocationAss
 
     @Override
     public void onFallBackToSystemSettings(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(getActivity())
                 .setMessage(R.string.switchOnLocationLong)
                 .setPositiveButton(R.string.ok, fromDialog)
                 .show();
