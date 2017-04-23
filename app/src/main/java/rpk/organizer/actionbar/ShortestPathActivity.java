@@ -191,6 +191,5 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
     }
 }
