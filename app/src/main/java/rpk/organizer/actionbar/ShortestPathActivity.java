@@ -62,10 +62,9 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         map = (SupportMapFragment) fm.findFragmentById(R.id.map);
-        if (map == null) {
-            map = SupportMapFragment.newInstance();
-            fm.beginTransaction().replace(R.id.map, map).commit();
-        }
+        map = SupportMapFragment.newInstance();
+        fm.beginTransaction().replace(R.id.map, map).commit();
+
         map.getMapAsync(this);
 
     }
