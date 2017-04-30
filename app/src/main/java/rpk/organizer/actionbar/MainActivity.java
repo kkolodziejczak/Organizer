@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("LUL");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment frag=null;
+        Fragment frag = null;
         Class fragmentClass;
         fragmentClass = Default.class;
         try {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        fragmentManager.beginTransaction().replace(R.id.frame,frag ).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
         LoadDataToClasses();
     }
 
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Fragment frag=null;
+        Fragment frag = null;
         Class fragmentClass;
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.mapAction:
                 fragmentClass = ShortestPathActivity.class;
                 break;
@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void LoadDataToClasses(){
-        for(int i =0;i<15;i++)
-            EventList.addEvent(new EventInfo("Ktos","Meeting","Kojama"+i,"8:15"));
+    public void LoadDataToClasses() {
+        for (int i = 0; i < 15; i++)
+            EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
     }
 }
