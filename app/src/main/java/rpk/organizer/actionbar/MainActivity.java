@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
+        fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(null).commit();
         return false;
     }
 
