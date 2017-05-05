@@ -11,7 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
      />
-
+    <Button
+        android:id="@+id/google_calendar_api_call"
+        android:text="Zapytanie API"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
         <ListView
             android:id="@+id/EventList"
             android:layout_width="match_parent"
