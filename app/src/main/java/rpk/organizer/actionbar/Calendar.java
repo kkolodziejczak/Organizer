@@ -18,7 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,16 +34,24 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
 import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.CalendarList;
+import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import rpk.organizer.actionbar.Utils.DataUtils;
 import rpk.organizer.actionbar.Utils.EventList;
 
 import static android.app.Activity.RESULT_OK;
@@ -60,7 +70,8 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
     private ListView EventListView;
     private Context mContext;
-
+    private CalendarView mCalendar;
+    private DateTime timeToGet;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,7 +84,16 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         Bundle bundle = getArguments();
         mContext = getContext();
         EventListView = (ListView) getActivity().findViewById(R.id.EventList);
-        populateList();
+        mCalendar = (CalendarView) getActivity().findViewById(R.id.Calendar);
+
+
+        mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
+                timeToGet = new DateTime(year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z");
+                Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Button button = (Button) getActivity().findViewById(R.id.google_calendar_api_call);
 
@@ -321,7 +341,8 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         @Override
         protected List<String> doInBackground(Void... params) {
             try {
-                return getDataFromApi();
+//                return getDataFromApi();
+                return getCalendarListFromApi();
             } catch (Exception e) {
                 mLastError = e;
                 cancel(true);
@@ -337,11 +358,13 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
          */
         private List<String> getDataFromApi() throws IOException {
             // List the next 10 events from the primary calendar.
-            DateTime now = new DateTime(System.currentTimeMillis());
+            if (timeToGet == null)
+                timeToGet = new DateTime(System.currentTimeMillis());
+
             List<String> eventStrings = new ArrayList<String>();
             Events events = mService.events().list("primary")
                     .setMaxResults(10)
-                    .setTimeMin(now)
+                    .setTimeMin(timeToGet)
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
@@ -349,22 +372,44 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
-                if (start == null) {
-                    // All-day events don't have start times, so just use
-                    // the start date.
+                if (start == null)
                     start = event.getStart().getDate();
-                }
+
+                EventList.addEvent(new EventInfo(event.getSummary(), DataUtils.toHourMin(start,":")));
                 eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), start));
+                        String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start,":")));
             }
             return eventStrings;
         }
 
+        private List<String> getCalendarListFromApi(){
+            List<String> CalendarStrings = new ArrayList<String>();
 
+            String pageToken = null;
+            try{
+                do {
+                    CalendarList calendarList = mService.calendarList().list().setPageToken(pageToken).execute();
+                    List<CalendarListEntry> items = calendarList.getItems();
+
+                    for (CalendarListEntry calendarListEntry : items) {
+                        EventList.addEvent(new EventInfo(calendarListEntry.getSummary(), "TEST"));
+                        CalendarStrings.add(calendarListEntry.getSummary());
+//                        ID
+                    }
+                    pageToken = calendarList.getNextPageToken();
+                } while (pageToken != null);
+            }catch (Exception e){
+
+            }
+
+            return CalendarStrings;
+        }
         @Override
         protected void onPreExecute() {
 //            mOutputText.setText("");
 //            mProgress.show();
+            EventList.Clear();
+
         }
 
         @Override
@@ -375,6 +420,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             } else {
                 output.add(0, "Data retrieved using the Google Calendar API:");
 //                mOutputText.setText(TextUtils.join("\n", output));
+                populateList();
             }
         }
 

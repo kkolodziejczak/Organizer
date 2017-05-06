@@ -9,8 +9,9 @@
     <CalendarView
         android:id="@+id/Calendar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150pt"
      />
+
     <Button
         android:id="@+id/google_calendar_api_call"
         android:text="Zapytanie API"

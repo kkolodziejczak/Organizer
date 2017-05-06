@@ -6,6 +6,10 @@ public class EventInfo {
     private String where;
     private String time;
 
+        EventInfo(String _what,String time){
+            this.what = _what;
+            this.time = time;
+        }
         EventInfo(String _who, String _what, String _where, String time){
             this.who = _who;
             this.what = _what;
