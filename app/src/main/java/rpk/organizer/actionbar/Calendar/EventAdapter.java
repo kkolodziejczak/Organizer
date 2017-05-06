@@ -1,4 +1,4 @@
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.Calendar;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+
+import rpk.organizer.actionbar.R;
 
 class EventAdapter extends BaseAdapter {
     private Context mContext;

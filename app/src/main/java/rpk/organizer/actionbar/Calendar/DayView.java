@@ -1,4 +1,4 @@
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.Calendar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import rpk.organizer.actionbar.Calendar.EventAdapter;
+import rpk.organizer.actionbar.R;
 import rpk.organizer.actionbar.Utils.EventList;
 
 public class DayView extends Fragment {

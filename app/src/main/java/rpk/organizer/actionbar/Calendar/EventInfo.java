@@ -1,4 +1,4 @@
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.Calendar;
 
 public class EventInfo {
     private String who;

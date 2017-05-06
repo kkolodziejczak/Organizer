@@ -1,4 +1,4 @@
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.Calendar;
 
 import android.Manifest;
 import android.accounts.AccountManager;
@@ -40,21 +40,22 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import rpk.organizer.actionbar.R;
 import rpk.organizer.actionbar.Utils.DataUtils;
 import rpk.organizer.actionbar.Utils.EventList;
 
 import static android.app.Activity.RESULT_OK;
+
+enum Task{
+    GetEvents,
+    GetCalendars
+}
 
 //Fragment
 public class Calendar extends Fragment implements EasyPermissions.PermissionCallbacks {
@@ -129,7 +130,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         } else if (!isDeviceOnline()) {
 //            mOutputText.setText("No network connection available.");
         } else {
-            new MakeRequestTask(mCredential).execute();
+            new MakeRequestTask(mCredential).execute(Task.GetCalendars);
         }
     }
 
@@ -320,9 +321,10 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
      * An asynchronous task that handles the Google Calendar API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    private class MakeRequestTask extends AsyncTask<Task, Void, List<String>> {
         private com.google.api.services.calendar.Calendar mService = null;
         private Exception mLastError = null;
+        private Task task;
 
         MakeRequestTask(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
@@ -339,15 +341,24 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
          * @param params no parameters needed for this task.
          */
         @Override
-        protected List<String> doInBackground(Void... params) {
-            try {
-//                return getDataFromApi();
-                return getCalendarListFromApi();
-            } catch (Exception e) {
-                mLastError = e;
-                cancel(true);
-                return null;
-            }
+        protected List<String> doInBackground(Task... params) {
+            if(params.length > 0)
+                try {
+                    this.task = params[0];
+                    switch (params[0]){
+                        case GetEvents:
+                            return getDataFromApi();
+                        case GetCalendars:
+                            return getCalendarListFromApi();
+                        default:
+                            return null;
+                    }
+                } catch (Exception e) {
+                    mLastError = e;
+                    cancel(true);
+                    return null;
+                }
+            return null;
         }
 
         /**
@@ -406,9 +417,14 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         }
         @Override
         protected void onPreExecute() {
-//            mOutputText.setText("");
 //            mProgress.show();
-            EventList.Clear();
+            switch (task){
+                case GetEvents:
+                    EventList.Clear();
+                    break;
+                case GetCalendars:
+                    break;
+            }
 
         }
 
@@ -418,9 +434,15 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             if (output == null || output.size() == 0) {
 //                mOutputText.setText("No results returned.");
             } else {
+                switch (task){
+                    case GetEvents:
+                        populateList();
+                        break;
+                    case GetCalendars:
+                        break;
+                }
                 output.add(0, "Data retrieved using the Google Calendar API:");
 //                mOutputText.setText(TextUtils.join("\n", output));
-                populateList();
             }
         }
 

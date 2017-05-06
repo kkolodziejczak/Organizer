@@ -4,7 +4,7 @@
     android:id="@+id/activity_calendar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="rpk.organizer.actionbar.Calendar">
+    tools:context="rpk.organizer.actionbar.Calendar.Calendar">
 
     <CalendarView
         android:id="@+id/Calendar"

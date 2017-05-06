@@ -19,4 +19,8 @@
         this app is so cool and needs your location because&#8230; you know. Click "OK" to change the permission
         settings.</string>
     <string name="mockLocationMessage">Stop\nMocking\nMe</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_calendar_name_view">CalendarNameView</string>
 </resources>

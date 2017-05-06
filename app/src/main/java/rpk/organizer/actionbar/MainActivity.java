@@ -5,13 +5,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.List;
 import java.util.Random;
 
+import rpk.organizer.actionbar.Calendar.Calendar;
+import rpk.organizer.actionbar.Calendar.EventInfo;
 import rpk.organizer.actionbar.Utils.EventList;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         selectedFragmentClass = fragmentClass;
         // nie odkladamy domyslnego fragmentu (menu) na stos fragmentow
         fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
-        LoadDataToClasses();
+//        LoadDataToClasses();
         RandomPlacesGenerate();
     }
 
@@ -93,10 +93,10 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void LoadDataToClasses() {
-        for (int i = 0; i < 15; i++)
-            EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
-    }
+//    public void LoadDataToClasses() {
+//        for (int i = 0; i < 15; i++)
+//            EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
+//    }
     public void RandomPlacesGenerate(){
                 Random rnd = new Random();
                 int limit=rnd.nextInt(10);

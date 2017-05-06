@@ -3,7 +3,7 @@ package rpk.organizer.actionbar.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import rpk.organizer.actionbar.EventInfo;
+import rpk.organizer.actionbar.Calendar.EventInfo;
 
 
 public class EventList {
