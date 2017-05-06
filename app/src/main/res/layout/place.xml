@@ -14,6 +14,9 @@
         android:layout_marginRight="4pt"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:typeface="sans"
         android:layout_weight="1" />
     <TextView
         android:id="@+id/Time"
@@ -26,6 +29,8 @@
         android:layout_marginRight="4pt"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
+        android:textSize="30dp"
+        android:gravity="center"
         android:layout_weight="3" />
 
 </LinearLayout>
