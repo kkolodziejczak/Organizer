@@ -10,8 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.List;
+import java.util.Random;
 
 import rpk.organizer.actionbar.Utils.EventList;
+import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("LUL");
+        toolbar.setTitle("MainBar");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment frag = null;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         // nie odkladamy domyslnego fragmentu (menu) na stos fragmentow
         fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
         LoadDataToClasses();
+        RandomPlacesGenerate();
     }
 
 
@@ -63,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 tag = "CALENDAR";
                 break;
             case R.id.myPlaceAction:
-                fragmentClass = Default.class;
-                tag = "MENU";
+                fragmentClass = MyPlacesActivity.class;
+                tag = "MY_PLACES";
                 break;
             default:
                 fragmentClass = Default.class;
@@ -93,6 +96,14 @@ public class MainActivity extends AppCompatActivity {
     public void LoadDataToClasses() {
         for (int i = 0; i < 15; i++)
             EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
+    }
+    public void RandomPlacesGenerate(){
+                Random rnd = new Random();
+                int limit=rnd.nextInt(10);
+                for(int i=0;i<limit;++i){
+                    PlacesHandler.addPlace(new Place(String.format("Miesjce %d",PlacesHandler.getIter()),"0:00"));
+                    PlacesHandler.IterIncrement();
+                }
     }
 
     // moze sie przydac. identyfikacja odbywa sie po tagach, ktore przypisywane sa do fragmentow w onOptionsItemSelected

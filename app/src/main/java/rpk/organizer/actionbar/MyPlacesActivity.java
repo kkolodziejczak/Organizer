@@ -1,16 +1,25 @@
 package rpk.organizer.actionbar;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+
+import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 
 public class MyPlacesActivity extends Fragment {
-
+    private ListView PlacesListView;
+    private Context mContext;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -22,5 +31,22 @@ public class MyPlacesActivity extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
+        mContext = getContext();
+        PlacesListView = (ListView)getActivity().findViewById(R.id.lista);
+        populate();
+    }
+    public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+        //Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
+        // Then you start a new Activity via Intent
+        //Intent intent = new Intent();
+        //intent.setClass(this, ListItemDetail.class);
+        //intent.putExtra("position", position);
+        // Or / And
+        //intent.putExtra("id", id);
+        //startActivity(intent);
+    }
+    public void populate() {
+                PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(),mContext);
+                PlacesListView.setAdapter(adapter);
     }
 }
