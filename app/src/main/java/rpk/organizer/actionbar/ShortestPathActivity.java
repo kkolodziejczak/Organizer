@@ -18,10 +18,13 @@ package rpk.organizer.actionbar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -29,21 +32,46 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.ButtCap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
-public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, OnMapReadyCallback {
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+
+import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
+import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
+import rpk.organizer.actionbar.ShortestPath.Route;
+
+public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, DirectionFinderListener, OnMapReadyCallback {
 
     private TextView tvLocation;
     private LocationAssistant assistant;
     private SupportMapFragment map;
     private GoogleMap mMap;
+
+    private List<Marker> originMarkers = new ArrayList<>();
+    private List<Marker> destinationMarkers = new ArrayList<>();
+    private List<Polyline> polylinePaths = new ArrayList<>();
+    private ProgressDialog progressDialog;
+    private EditText etOrigin;
+    private EditText etDestination;
 
     @Nullable
     @Override
@@ -64,9 +92,37 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         map = (SupportMapFragment) fm.findFragmentById(R.id.map);
         map = SupportMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.map, map).commit();
-
         map.getMapAsync(this);
 
+        etOrigin = (EditText) getView().findViewById(R.id.etOrigin);
+        etDestination = (EditText) getView().findViewById(R.id.etDestination);
+        Button btnFindPath = (Button) getView().findViewById(R.id.btnFindPath);
+        btnFindPath.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick (View view) {
+                sendRequest();
+            }
+        });
+
+    }
+
+    private void sendRequest() {
+        String origin = etOrigin.getText().toString();
+        String destination = etDestination.getText().toString();
+
+        if (origin.isEmpty()) {
+            Toast.makeText(getContext(), "Podaj adres początkowy", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (destination.isEmpty()) {
+            Toast.makeText(getContext(), "Podaj adres końcowy", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -81,6 +137,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         super.onPause();
     }
 
+    @NonNull
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (assistant.onPermissionsUpdated(requestCode, grantResults))
@@ -165,12 +222,12 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     public void onNewLocationAvailable(Location location) {
         if (location == null) return;
         tvLocation.setOnClickListener(null);
-        tvLocation.setText(location.getLongitude() + "\n" + location.getLatitude());
+        tvLocation.setText(location.getLongitude() + "; " + location.getLatitude());
         if (assistant.getBestLocation() != null) {
             mMap.clear();
-            LatLng sydney = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title(""));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(myPosition).title(""));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
@@ -190,5 +247,66 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+//        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle_night);
+        //mMap.setMapStyle(style);
+//        mMap.move
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+    }
+
+    @Override
+    public void onDirectionFinderStart() {
+        progressDialog = ProgressDialog.show(getContext(), "Please wait.",
+                "Finding direction..!", true);
+
+        if (originMarkers != null) {
+            for (Marker marker : originMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (destinationMarkers != null) {
+            for (Marker marker : destinationMarkers) {
+                marker.remove();
+            }
+        }
+
+        if (polylinePaths != null) {
+            for (Polyline polyline:polylinePaths ) {
+                polyline.remove();
+            }
+        }
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+        progressDialog.dismiss();
+        polylinePaths = new ArrayList<>();
+        originMarkers = new ArrayList<>();
+        destinationMarkers = new ArrayList<>();
+
+        for (Route route : routes) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
+            ((TextView) getView().findViewById(R.id.tvDuration)).setText(route.duration.text);
+            ((TextView) getView().findViewById(R.id.tvDistance)).setText(route.distance.text);
+
+            originMarkers.add(mMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
+                    .title(route.startAddress)
+                    .position(route.startLocation)));
+            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
+                    .title(route.endAddress)
+                    .position(route.endLocation)));
+
+            PolylineOptions polylineOptions = new PolylineOptions().
+                    geodesic(true).
+                    color(Color.BLUE).
+                    width(10);
+
+            for (int i = 0; i < route.points.size(); i++)
+                polylineOptions.add(route.points.get(i));
+
+            polylinePaths.add(mMap.addPolyline(polylineOptions));
+        }
     }
 }
