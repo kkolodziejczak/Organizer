@@ -19,6 +19,7 @@ package rpk.organizer.actionbar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,6 +33,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -85,7 +87,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
         assistant.setVerbose(true);
 
-        tvLocation = (TextView) getView().findViewById(R.id.tvLocation);
+        tvLocation = (TextView) view.findViewById(R.id.tvLocation);
         tvLocation.setText(getString(R.string.empty));
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -94,13 +96,18 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         fm.beginTransaction().replace(R.id.map, map).commit();
         map.getMapAsync(this);
 
-        etOrigin = (EditText) getView().findViewById(R.id.etOrigin);
-        etDestination = (EditText) getView().findViewById(R.id.etDestination);
-        Button btnFindPath = (Button) getView().findViewById(R.id.btnFindPath);
+        etOrigin = (EditText) view.findViewById(R.id.etOrigin);
+        etDestination = (EditText) view.findViewById(R.id.etDestination);
+        Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
                 sendRequest();
+                // Chowanie klawiatury
+                InputMethodManager inputManager = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
             }
         });
 
