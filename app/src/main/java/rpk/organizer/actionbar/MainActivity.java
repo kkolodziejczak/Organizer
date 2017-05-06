@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 Random rnd = new Random();
                 int limit=rnd.nextInt(10);
                 for(int i=0;i<limit;++i){
-                    PlacesHandler.addPlace(new Place(String.format("Miesjce %d",PlacesHandler.getIter()),"0:00"));
+                    PlacesHandler.addPlace(new Place(String.format("Miejsce %d",PlacesHandler.getIter()),"0:00"));
                     PlacesHandler.IterIncrement();
                 }
     }
