@@ -102,6 +102,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 timeToGet = new DateTime(year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z");
                 Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
+                getResultsFromApi(Task.GetEvents);
             }
         });
 
@@ -422,13 +423,15 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         @Override
         protected void onPreExecute() {
 //            mProgress.show();
-//              EventList.Clear();
+              EventList.Clear();
         }
 
         @Override
         protected void onPostExecute(List<String> output) {
 //            mProgress.hide();
             if (output == null || output.size() == 0) {
+                EventAdapter adapter = new EventAdapter(mContext, new ArrayList<EventInfo>());
+                EventListView.setAdapter(adapter);
 //                mOutputText.setText("No results returned.");
             } else {
                 switch (task){

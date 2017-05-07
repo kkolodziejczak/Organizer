@@ -10,10 +10,14 @@ public class EventList {
     private static List<EventInfo> Events;
 
     public static int Count(){
+        if(Events == null)
+            Events = new ArrayList<>();
         return Events.size();
     }
 
     public static void Clear(){
+        if(Events == null)
+            Events = new ArrayList<>();
         Events.clear();
     }
 
