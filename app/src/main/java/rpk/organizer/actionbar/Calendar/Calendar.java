@@ -374,15 +374,14 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
          * @throws IOException
          */
         private List<String> getDataFromApi() throws IOException {
-            // List the next 10 events from the primary calendar.
             if (timeToGet == null)
                 timeToGet = new DateTime(System.currentTimeMillis());
-            String s = CalendarNames.get(mSpinner.getSelectedItem());
             List<String> eventStrings = new ArrayList<String>();
 //            Events events = mService.events().list("primary")
-            Events events = mService.events().list(s)
-                    .setMaxResults(10)
+            org.joda.time.DateTime dateTime = new org.joda.time.DateTime(timeToGet.toString());
+            Events events = mService.events().list(CalendarNames.get(mSpinner.getSelectedItem()))
                     .setTimeMin(timeToGet)
+                    .setTimeMax(new DateTime(dateTime.plusDays(1).toString()))
                     .setOrderBy("startTime")
                     .setSingleEvents(true)
                     .execute();
