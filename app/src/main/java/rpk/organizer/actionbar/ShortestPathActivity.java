@@ -22,12 +22,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +54,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
@@ -60,6 +64,7 @@ import rpk.organizer.actionbar.ShortestPath.Route;
 public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, DirectionFinderListener, OnMapReadyCallback {
 
     private TextView tvLocation;
+    private TextView tvLocationAdress;
     private LocationAssistant assistant;
     private SupportMapFragment map;
     private GoogleMap mMap;
@@ -85,6 +90,9 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
 
         tvLocation = (TextView) view.findViewById(R.id.tvLocation);
         tvLocation.setText(getString(R.string.empty));
+
+        tvLocationAdress = (TextView) view.findViewById(R.id.tvLocationAdress);
+        tvLocationAdress.setText("");
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
         map = (SupportMapFragment) fm.findFragmentById(R.id.map);
@@ -221,12 +229,40 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
                 .show();
     }
 
+
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return strAdd;
+    }
+
     @Override
     public void onNewLocationAvailable(Location location) {
         if (location == null) return;
         tvLocation.setOnClickListener(null);
         tvLocation.setText(location.getLongitude() + "; " + location.getLatitude());
         if (assistant.getBestLocation() != null) {
+            // test {
+            String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+            tvLocationAdress.setText(geolocation);
+            // }
             mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(myPosition).title(""));
