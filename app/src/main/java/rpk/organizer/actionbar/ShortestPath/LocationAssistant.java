@@ -14,7 +14,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.ShortestPath;
 
 import android.Manifest;
 import android.app.Activity;

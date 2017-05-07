@@ -16,7 +16,6 @@
  */
 package rpk.organizer.actionbar;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -28,7 +27,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,13 +39,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.ButtCap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -59,6 +54,7 @@ import java.util.List;
 
 import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
+import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
 import rpk.organizer.actionbar.ShortestPath.Route;
 
 public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, DirectionFinderListener, OnMapReadyCallback {
