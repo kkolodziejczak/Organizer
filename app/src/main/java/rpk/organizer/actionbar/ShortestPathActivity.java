@@ -40,12 +40,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -323,6 +325,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         polylinePaths = new ArrayList<>();
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
 
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
@@ -343,10 +346,19 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
                     color(Color.BLUE).
                     width(10);
 
-            for (int i = 0; i < route.points.size(); i++)
+            for (int i = 0; i < route.points.size(); i++) {
                 polylineOptions.add(route.points.get(i));
-
+                builder.include(route.points.get(i));
+            }
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
+        LatLngBounds bounds = builder.build();
+
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        mMap.animateCamera(cu);
     }
 }
