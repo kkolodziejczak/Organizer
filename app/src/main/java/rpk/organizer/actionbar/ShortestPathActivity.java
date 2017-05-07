@@ -290,6 +290,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         //mMap.setMapStyle(style);
 //        mMap.move
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
     }
 
     @Override
