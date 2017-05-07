@@ -17,9 +17,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,7 +44,9 @@ import com.google.api.services.calendar.model.Events;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -73,6 +77,9 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     private Context mContext;
     private CalendarView mCalendar;
     private DateTime timeToGet;
+    private Spinner mSpinner;
+    public HashMap<String, String> CalendarNames;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,7 +93,9 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         mContext = getContext();
         EventListView = (ListView) getActivity().findViewById(R.id.EventList);
         mCalendar = (CalendarView) getActivity().findViewById(R.id.Calendar);
+        mSpinner = (Spinner) getActivity().findViewById(R.id.CalendarNames);
 
+        CalendarNames = new HashMap<String, String>();
 
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -101,18 +110,15 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getResultsFromApi();
+                getResultsFromApi(Task.GetEvents);
             }
         });
 
         mCredential = GoogleAccountCredential.usingOAuth2(
                 getContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
-    }
 
-    private void populateList() {
-        EventAdapter adapter = new EventAdapter(mContext, EventList.getEvents());
-        EventListView.setAdapter(adapter);
+        getResultsFromApi(Task.GetCalendars);
     }
 
     /**
@@ -122,7 +128,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
      * of the preconditions are not satisfied, the app will prompt the user as
      * appropriate.
      */
-    private void getResultsFromApi() {
+    private void getResultsFromApi(Task task) {
         if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
@@ -130,7 +136,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         } else if (!isDeviceOnline()) {
 //            mOutputText.setText("No network connection available.");
         } else {
-            new MakeRequestTask(mCredential).execute(Task.GetCalendars);
+            new MakeRequestTask(mCredential).execute(task);
         }
     }
 
@@ -151,7 +157,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             String accountName = getActivity().getPreferences(Context.MODE_PRIVATE).getString(PREF_ACCOUNT_NAME, null);
             if (accountName != null) {
                 mCredential.setSelectedAccountName(accountName);
-                getResultsFromApi();
+                getResultsFromApi(Task.GetCalendars);
             } else {
                 // Start a dialog from which the user can choose an account
                 startActivityForResult(
@@ -190,7 +196,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 //                            "This app requires Google Play Services. Please install " +
 //                                    "Google Play Services on your device and relaunch this app.");
                 } else {
-                    getResultsFromApi();
+                    getResultsFromApi(Task.GetCalendars);
                 }
                 break;
             case REQUEST_ACCOUNT_PICKER:
@@ -204,13 +210,13 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.apply();
                         mCredential.setSelectedAccountName(accountName);
-                        getResultsFromApi();
+                        getResultsFromApi(Task.GetCalendars);
                     }
                 }
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == RESULT_OK) {
-                    getResultsFromApi();
+                    getResultsFromApi(Task.GetCalendars);
                 }
                 break;
         }
@@ -356,7 +362,6 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 } catch (Exception e) {
                     mLastError = e;
                     cancel(true);
-                    return null;
                 }
             return null;
         }
@@ -371,9 +376,10 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             // List the next 10 events from the primary calendar.
             if (timeToGet == null)
                 timeToGet = new DateTime(System.currentTimeMillis());
-
+            String s = CalendarNames.get(mSpinner.getSelectedItem());
             List<String> eventStrings = new ArrayList<String>();
-            Events events = mService.events().list("primary")
+//            Events events = mService.events().list("primary")
+            Events events = mService.events().list(s)
                     .setMaxResults(10)
                     .setTimeMin(timeToGet)
                     .setOrderBy("startTime")
@@ -401,11 +407,9 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 do {
                     CalendarList calendarList = mService.calendarList().list().setPageToken(pageToken).execute();
                     List<CalendarListEntry> items = calendarList.getItems();
-
                     for (CalendarListEntry calendarListEntry : items) {
-                        EventList.addEvent(new EventInfo(calendarListEntry.getSummary(), "TEST"));
                         CalendarStrings.add(calendarListEntry.getSummary());
-//                        ID
+                        CalendarNames.put(calendarListEntry.getSummary(),calendarListEntry.getId());
                     }
                     pageToken = calendarList.getNextPageToken();
                 } while (pageToken != null);
@@ -418,14 +422,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         @Override
         protected void onPreExecute() {
 //            mProgress.show();
-            switch (task){
-                case GetEvents:
-                    EventList.Clear();
-                    break;
-                case GetCalendars:
-                    break;
-            }
-
+//              EventList.Clear();
         }
 
         @Override
@@ -436,13 +433,16 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             } else {
                 switch (task){
                     case GetEvents:
-                        populateList();
+                        EventAdapter adapter = new EventAdapter(mContext, EventList.getEvents());
+                        int l = EventList.Count();
+                        EventListView.setAdapter(adapter);
                         break;
                     case GetCalendars:
+                        ArrayAdapter<String> gameKindArray= new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, output);
+                        gameKindArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        mSpinner.setAdapter(gameKindArray);
                         break;
                 }
-                output.add(0, "Data retrieved using the Google Calendar API:");
-//                mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 

@@ -9,6 +9,10 @@ import rpk.organizer.actionbar.Calendar.EventInfo;
 public class EventList {
     private static List<EventInfo> Events;
 
+    public static int Count(){
+        return Events.size();
+    }
+
     public static void Clear(){
         Events.clear();
     }
