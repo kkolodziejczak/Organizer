@@ -38,6 +38,12 @@ public class MyPlacesActivity extends Fragment {
         Bundle bundle = getArguments();
         mContext = getContext();
         PlacesListView = (ListView)getActivity().findViewById(R.id.lista);
+                PlacesListView.post(new Runnable() {
+            @Override
+            public void run() {
+                PlacesListView.requestLayout();
+            }
+        });
         fab = (FloatingActionButton)getActivity().findViewById(R.id.fapPlace);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
