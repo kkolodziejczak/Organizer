@@ -60,10 +60,12 @@ public class MainActivity extends AppCompatActivity {
         Fragment frag = null;
         String tag = "MENU";
         Class fragmentClass;
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
+        // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
+        if (fragmentManager.getBackStackEntryCount() == 0) {
             selectedFragmentClass = null;
         }
-
         switch (item.getItemId()) {
             case R.id.mapAction:
                 fragmentClass = ShortestPathActivity.class;
@@ -92,11 +94,9 @@ public class MainActivity extends AppCompatActivity {
             // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
             // naciskania przycisku Back w celu opuszczenia aplikacji
             if (fragmentClass != Default.class) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
             }
         }
-        Log.d("LICZBA_FRAGMENTOW", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
         // po kazdym wyborze z ActionBar zapisz informacje o klasie fragmentu
         selectedFragmentClass = fragmentClass;
         return false;
@@ -126,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
-        Log.d("LICZBA_FRAGMENTOW", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
         if (count == 0) {
             super.onBackPressed();
         } else {
