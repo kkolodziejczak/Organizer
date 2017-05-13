@@ -52,7 +52,7 @@ public class MyPlacesActivity extends Fragment {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.dialog_addplace);
                 // Custom Android Allert Dialog Title
-                dialog.setTitle("Custom Dialog Example");
+                dialog.setTitle(R.string.dialog_title);
 
                 Button dialogButtonCancel = (Button) dialog.findViewById(R.id.customDialogCancel);
                 Button dialogButtonOk = (Button) dialog.findViewById(R.id.customDialogOk);
@@ -71,6 +71,7 @@ public class MyPlacesActivity extends Fragment {
                     public void onClick(View v) {
                         dialog.dismiss();
                         //TODO adding list element
+
                     }
                 });
 
