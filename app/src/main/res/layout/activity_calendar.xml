@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"
-        android:elevation="1dp" />
+        />
 
     <CalendarView
         android:id="@+id/Calendar"
@@ -19,14 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/CalendarNames"
         android:firstDayOfWeek="2"
-        android:minHeight="150dp" />
-
-    <Button
-        android:id="@+id/google_calendar_api_call"
-        android:text="Zapytanie API"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/EventList"
+        android:minHeight="150dp"
         />
 
     <ListView
@@ -34,6 +27,5 @@
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_below="@+id/Calendar"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"></ListView>
+        />
 </RelativeLayout>
