@@ -364,10 +364,10 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         LatLngBounds bounds = builder.build();
 
         int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
+        //int height = getResources().getDisplayMetrics().heightPixels;
         int padding = (int) (width * 0.1); // offset from edges of the map 10% of screen
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.animateCamera(cu);
         isPathExisting = true;
     }
