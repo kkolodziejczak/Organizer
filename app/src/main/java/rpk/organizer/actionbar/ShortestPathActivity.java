@@ -71,12 +71,14 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     private SupportMapFragment map;
     private GoogleMap mMap;
 
+    private Marker myPostionmarker;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
     private EditText etOrigin;
     private EditText etDestination;
+    boolean isPathExisting = false;
 
     @Nullable
     @Override
@@ -267,8 +269,15 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
             // }
             ///mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(myPosition).title(""));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
+            MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title("");
+            if(myPostionmarker == null){
+                myPostionmarker = mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
+            }
+            else {
+                myPostionmarker.setPosition(myPosition);
+            }
+
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
@@ -360,5 +369,6 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cu);
+        isPathExisting = true;
     }
 }
