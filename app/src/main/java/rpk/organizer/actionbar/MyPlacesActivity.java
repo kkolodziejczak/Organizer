@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import rpk.organizer.actionbar.Utils.PlacesHandler;
@@ -69,6 +70,8 @@ public class MyPlacesActivity extends Fragment {
                 dialogButtonOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        EditText edit=(EditText) dialog.findViewById(R.id.placeName);
+                        PlacesHandler.addPlace(new Place(edit.getText().toString(),"0:00"));
                         dialog.dismiss();
                         //TODO adding list element
 
