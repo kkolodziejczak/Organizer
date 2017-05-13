@@ -13,8 +13,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.Random;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
-import rpk.organizer.actionbar.Calendar.EventInfo;
-import rpk.organizer.actionbar.Utils.EventList;
+import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
