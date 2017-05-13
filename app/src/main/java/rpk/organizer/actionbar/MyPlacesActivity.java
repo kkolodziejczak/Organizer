@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import rpk.organizer.actionbar.Utils.PlacesHandler;
@@ -52,7 +53,7 @@ public class MyPlacesActivity extends Fragment {
                 final Dialog dialog = new Dialog(getContext());
                 dialog.setContentView(R.layout.dialog_addplace);
                 // Custom Android Allert Dialog Title
-                dialog.setTitle("Custom Dialog Example");
+                dialog.setTitle(R.string.dialog_title);
 
                 Button dialogButtonCancel = (Button) dialog.findViewById(R.id.customDialogCancel);
                 Button dialogButtonOk = (Button) dialog.findViewById(R.id.customDialogOk);
@@ -69,8 +70,11 @@ public class MyPlacesActivity extends Fragment {
                 dialogButtonOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        EditText edit=(EditText) dialog.findViewById(R.id.placeName);
+                        PlacesHandler.addPlace(new Place(edit.getText().toString(),"0:00"));
                         dialog.dismiss();
                         //TODO adding list element
+
                     }
                 });
 
