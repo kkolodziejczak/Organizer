@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -59,6 +60,10 @@ public class MainActivity extends AppCompatActivity {
         Fragment frag = null;
         String tag = "MENU";
         Class fragmentClass;
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            selectedFragmentClass = null;
+        }
+
         switch (item.getItemId()) {
             case R.id.mapAction:
                 fragmentClass = ShortestPathActivity.class;
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
             }
         }
+        Log.d("LICZBA_FRAGMENTOW", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
         // po kazdym wyborze z ActionBar zapisz informacje o klasie fragmentu
         selectedFragmentClass = fragmentClass;
         return false;
@@ -120,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
-
+        Log.d("LICZBA_FRAGMENTOW", String.valueOf(getSupportFragmentManager().getBackStackEntryCount()));
         if (count == 0) {
             super.onBackPressed();
         } else {
