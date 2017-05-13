@@ -104,6 +104,8 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         fm.beginTransaction().replace(R.id.map, map).commit();
         map.getMapAsync(this);
 
+
+
         etOrigin = (EditText) view.findViewById(R.id.etOrigin);
         etDestination = (EditText) view.findViewById(R.id.etDestination);
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
@@ -294,12 +296,48 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         tvLocation.setText(getString(R.string.error));
     }
 
+    private void mapEvents() {
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                // Creating a marker
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                // Setting the position for the marker
+                markerOptions.position(latLng);
+
+                // Setting the title for the marker.
+                // This will be displayed on taping the marker
+                //markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+
+                // Clears the previously touched position
+                mMap.clear();
+
+                // Animating to the touched position
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                // Placing a marker on the touched position
+                Marker marker = mMap.addMarker(markerOptions);
+                String s = getCompleteAddressString(latLng.latitude, latLng.longitude);
+                String lines[] = s.split("\\r?\\n");
+                String ss = "";
+                for (int i = 0; i < lines.length; i++) {
+                    if (i > 0) {
+                        ss += ", ";
+                    }
+                    ss += lines[i];
+                }
+                marker.setTitle(ss);
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle_night);
-        //mMap.setMapStyle(style);
-//        mMap.move
+        // Setting a click event handler for the map
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
