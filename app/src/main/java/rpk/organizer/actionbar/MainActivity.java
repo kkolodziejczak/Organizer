@@ -102,21 +102,21 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-//    public void LoadDataToClasses() {
+    //    public void LoadDataToClasses() {
 //        for (int i = 0; i < 15; i++)
 //            EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
 //    }
-    public void RandomPlacesGenerate(){
-                Random rnd = new Random();
-                int limit=rnd.nextInt(10);
-                for(int i=0;i<limit;++i){
-                    PlacesHandler.addPlace(new Place(String.format("Miejsce %d",PlacesHandler.getIter()),"0:00"));
-                    PlacesHandler.IterIncrement();
-                }
+    public void RandomPlacesGenerate() {
+        Random rnd = new Random();
+        int limit = rnd.nextInt(10);
+        for (int i = 0; i < limit; ++i) {
+            PlacesHandler.addPlace(new Place(String.format("Miejsce %d", PlacesHandler.getIter()), "0:00"));
+            PlacesHandler.IterIncrement();
+        }
     }
 
     // moze sie przydac. identyfikacja odbywa sie po tagach, ktore przypisywane sa do fragmentow w onOptionsItemSelected
-    private Fragment getCurrentFragment(){
+    private Fragment getCurrentFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
         return fragmentManager.findFragmentByTag(fragmentTag);
