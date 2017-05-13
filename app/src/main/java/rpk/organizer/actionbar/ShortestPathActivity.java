@@ -265,7 +265,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
             String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
             tvLocationAdress.setText(geolocation);
             // }
-            mMap.clear();
+            ///mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.addMarker(new MarkerOptions().position(myPosition).title(""));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
@@ -356,7 +356,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
 
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+        int padding = (int) (width * 0.1); // offset from edges of the map 10% of screen
 
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cu);
