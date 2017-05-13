@@ -101,16 +101,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 timeToGet = new DateTime(year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z");
-                Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
-                getResultsFromApi(Task.GetEvents);
-            }
-        });
-
-        Button button = (Button) getActivity().findViewById(R.id.google_calendar_api_call);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//                Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
                 getResultsFromApi(Task.GetEvents);
             }
         });
