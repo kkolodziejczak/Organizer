@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+<data>
+    <variable
+        name="user"
+        type="rpk.organizer.actionbar.Calendar.EventsInfo"/>
+    <variable
+        name="InfoAboutEvent"
+        type="com.google.api.services.calendar.model.Event"/>
+</data>
+    <android.support.constraint.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="rpk.organizer.actionbar.Calendar.EventInfo">
+
+        <TextView
+            android:id="@+id/NazwaEventu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event:"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="16dp"
+            />
+
+        <TextView
+            android:id="@+id/EventData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{InfoAboutEvent.summary}"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="33dp"
+            />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

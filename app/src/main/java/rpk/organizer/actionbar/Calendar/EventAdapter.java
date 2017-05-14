@@ -13,9 +13,9 @@ import rpk.organizer.actionbar.R;
 
 class EventAdapter extends BaseAdapter {
     private Context mContext;
-    private List<EventInfo> mListEvents;
+    private List<EventsInfo> mListEvents;
 
-    EventAdapter(Context context, List<EventInfo> list){
+    EventAdapter(Context context, List<EventsInfo> list){
         this.mContext = context;
         this.mListEvents = list;
     }
@@ -37,7 +37,7 @@ class EventAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        EventInfo wpis = mListEvents.get(position);
+        EventsInfo wpis = mListEvents.get(position);
 
         if(convertView == null){
             LayoutInflater inflater = LayoutInflater.from(mContext);

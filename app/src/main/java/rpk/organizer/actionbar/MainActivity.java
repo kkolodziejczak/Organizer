@@ -13,13 +13,12 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.Random;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
-import rpk.organizer.actionbar.Calendar.EventInfo;
-import rpk.organizer.actionbar.Utils.EventList;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
 
     static public Class selectedFragmentClass = null;
+    static public FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("MainBar");
+
+        fragmentManager = getSupportFragmentManager();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment frag = null;
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
 //        LoadDataToClasses();
         RandomPlacesGenerate();
     }
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -97,10 +97,21 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-//    public void LoadDataToClasses() {
-//        for (int i = 0; i < 15; i++)
-//            EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
-//    }
+    public static void AddNewFragmentOnTop(Class o, String tag){
+        Fragment frag = null;
+        Class fragmentClass = o;
+        try {
+            frag = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (selectedFragmentClass != fragmentClass && fragmentClass != Default.class)
+            fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
+
+        selectedFragmentClass = fragmentClass;
+    }
+
     public void RandomPlacesGenerate(){
                 Random rnd = new Random();
                 int limit=rnd.nextInt(10);

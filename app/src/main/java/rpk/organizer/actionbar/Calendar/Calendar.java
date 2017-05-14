@@ -17,12 +17,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -46,10 +46,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import rpk.organizer.actionbar.MainActivity;
 import rpk.organizer.actionbar.R;
 import rpk.organizer.actionbar.Utils.DataUtils;
 import rpk.organizer.actionbar.Utils.EventList;
@@ -70,6 +70,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+    public static Event EventToDisplay = null;
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
@@ -368,7 +369,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             if (timeToGet == null)
                 timeToGet = new DateTime(System.currentTimeMillis());
             List<String> eventStrings = new ArrayList<String>();
-//            Events events = mService.events().list("primary")
+
             org.joda.time.DateTime dateTime = new org.joda.time.DateTime(timeToGet.toString());
             Events events = mService.events().list(CalendarNames.get(mSpinner.getSelectedItem()))
                     .setTimeMin(timeToGet)
@@ -383,7 +384,8 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 if (start == null)
                     start = event.getStart().getDate();
 
-                EventList.addEvent(new EventInfo(event.getSummary(), DataUtils.toHourMin(start,":")));
+                EventList.addEvent(new EventsInfo(event.getSummary(), DataUtils.toHourMin(start,":")));
+                EventList.addGoogleEvent(event);
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start,":")));
             }
@@ -420,7 +422,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         protected void onPostExecute(List<String> output) {
 //            mProgress.hide();
             if (output == null || output.size() == 0) {
-                EventAdapter adapter = new EventAdapter(mContext, new ArrayList<EventInfo>());
+                EventAdapter adapter = new EventAdapter(mContext, new ArrayList<EventsInfo>());
                 EventListView.setAdapter(adapter);
 //                mOutputText.setText("No results returned.");
             } else {
@@ -429,6 +431,13 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                         EventAdapter adapter = new EventAdapter(mContext, EventList.getEvents());
                         int l = EventList.Count();
                         EventListView.setAdapter(adapter);
+                        EventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                EventToDisplay = EventList.getEventAt(position);
+                                MainActivity.AddNewFragmentOnTop(EventInfo.class,"EVENTINFO");
+                            }
+                        });
                         break;
                     case GetCalendars:
                         ArrayAdapter<String> gameKindArray= new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, output);
