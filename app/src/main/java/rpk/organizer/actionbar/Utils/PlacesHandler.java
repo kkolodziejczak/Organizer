@@ -29,4 +29,8 @@ public class PlacesHandler {
     public static void IterIncrement() {
         PlacesHandler.iter ++;
     }
+
+    public static Place getPlace(int id){
+        return Places.get(id);
+    }
 }

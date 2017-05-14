@@ -20,7 +20,7 @@ import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 
-public class MyPlacesActivity extends Fragment {
+public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClickListener {
     private ListView PlacesListView;
     private Context mContext;
     private FloatingActionButton fab;
@@ -43,6 +43,7 @@ public class MyPlacesActivity extends Fragment {
                 PlacesListView.requestLayout();
             }
         });
+        PlacesListView.setOnItemClickListener(this);
         fab = (FloatingActionButton)getActivity().findViewById(R.id.fapPlace);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +73,7 @@ public class MyPlacesActivity extends Fragment {
                         EditText edit2=(EditText) dialog.findViewById(R.id.etDestination);
                         PlacesHandler.addPlace(new Place(edit.getText().toString(),edit2.getText().toString(),"0:00"));
                         dialog.dismiss();
-                        //TODO adding list element
+                        //dodać element gdzieś gdzie zapamięta
 
                     }
                 });
@@ -83,9 +84,8 @@ public class MyPlacesActivity extends Fragment {
         populate();
     }
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-        String place = "";
-        Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.activity_main),
-               place, Snackbar.LENGTH_SHORT);
+        String place = PlacesHandler.getPlace((int)id).getPosition();
+        Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.activity_main), place, Snackbar.LENGTH_SHORT);
         mySnackbar.show();
         //Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
         // Then you start a new Activity via Intent
