@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,7 +37,7 @@ public class MyPlacesActivity extends Fragment {
         Bundle bundle = getArguments();
         mContext = getContext();
         PlacesListView = (ListView)getActivity().findViewById(R.id.lista);
-                PlacesListView.post(new Runnable() {
+        PlacesListView.post(new Runnable() {
             @Override
             public void run() {
                 PlacesListView.requestLayout();
@@ -68,7 +69,8 @@ public class MyPlacesActivity extends Fragment {
                     @Override
                     public void onClick(View v) {
                         EditText edit=(EditText) dialog.findViewById(R.id.placeName);
-                        PlacesHandler.addPlace(new Place(edit.getText().toString(),"0:00"));
+                        EditText edit2=(EditText) dialog.findViewById(R.id.etDestination);
+                        PlacesHandler.addPlace(new Place(edit.getText().toString(),edit2.getText().toString(),"0:00"));
                         dialog.dismiss();
                         //TODO adding list element
 
@@ -81,6 +83,10 @@ public class MyPlacesActivity extends Fragment {
         populate();
     }
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+        String place = "";
+        Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.activity_main),
+               place, Snackbar.LENGTH_SHORT);
+        mySnackbar.show();
         //Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
         // Then you start a new Activity via Intent
         //Intent intent = new Intent();
