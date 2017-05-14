@@ -20,14 +20,13 @@ public class EventInfo extends Fragment {
                 inflater, R.layout.activity_event_info, container, false);
 
         binding.setInfoAboutEvent(Calendar.EventToDisplay);
+
         return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Bundle bundle = getArguments();
-        mContext = getContext();
     }
 
 }
