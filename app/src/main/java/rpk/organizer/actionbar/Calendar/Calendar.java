@@ -71,6 +71,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     public static Event EventToDisplay = null;
+    public static String SelectedCalendar = null;
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
@@ -103,6 +104,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 timeToGet = new DateTime(year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z");
 //                Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
+                SelectedCalendar = (String) mSpinner.getSelectedItem();
                 getResultsFromApi(Task.GetEvents);
             }
         });

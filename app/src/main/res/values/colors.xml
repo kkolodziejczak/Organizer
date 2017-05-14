@@ -6,5 +6,7 @@
     <color name="white">#FFFFFF</color>
     <color name="blueBackground">#2959B2</color>
     <color name="oczojebnyBlue">#80FFFF</color>
+    <color name="FontColor">#212121</color>
+    <color name="TitleFontColor">#0084ff</color>
 
 </resources>
