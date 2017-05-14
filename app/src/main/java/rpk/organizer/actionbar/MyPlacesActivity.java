@@ -1,25 +1,28 @@
 package rpk.organizer.actionbar;
 
+import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
+import rpk.organizer.actionbar.MyPlaces.Place;
+import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 
 public class MyPlacesActivity extends Fragment {
     private ListView PlacesListView;
     private Context mContext;
+    private FloatingActionButton fab;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,6 +36,48 @@ public class MyPlacesActivity extends Fragment {
         Bundle bundle = getArguments();
         mContext = getContext();
         PlacesListView = (ListView)getActivity().findViewById(R.id.lista);
+                PlacesListView.post(new Runnable() {
+            @Override
+            public void run() {
+                PlacesListView.requestLayout();
+            }
+        });
+        fab = (FloatingActionButton)getActivity().findViewById(R.id.fapPlace);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // custom dialog
+                final Dialog dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.dialog_addplace);
+                // Custom Android Allert Dialog Title
+                dialog.setTitle(R.string.dialog_title);
+
+                Button dialogButtonCancel = (Button) dialog.findViewById(R.id.customDialogCancel);
+                Button dialogButtonOk = (Button) dialog.findViewById(R.id.customDialogOk);
+                // Click cancel to dismiss android custom dialog box
+                dialogButtonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                // Your android custom dialog ok action
+                // Action for custom dialog ok button click
+                dialogButtonOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        EditText edit=(EditText) dialog.findViewById(R.id.placeName);
+                        PlacesHandler.addPlace(new Place(edit.getText().toString(),"0:00"));
+                        dialog.dismiss();
+                        //TODO adding list element
+
+                    }
+                });
+
+                dialog.show();
+            }
+        });
         populate();
     }
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {

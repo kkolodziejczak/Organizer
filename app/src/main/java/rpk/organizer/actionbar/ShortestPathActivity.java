@@ -71,12 +71,14 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     private SupportMapFragment map;
     private GoogleMap mMap;
 
+    private Marker myPostionmarker;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
     private EditText etOrigin;
     private EditText etDestination;
+    boolean isPathExisting = false;
 
     @Nullable
     @Override
@@ -101,6 +103,8 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         map = SupportMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.map, map).commit();
         map.getMapAsync(this);
+
+
 
         etOrigin = (EditText) view.findViewById(R.id.etOrigin);
         etDestination = (EditText) view.findViewById(R.id.etDestination);
@@ -267,8 +271,15 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
             // }
             ///mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(myPosition).title(""));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
+            MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title("");
+            if(myPostionmarker == null){
+                myPostionmarker = mMap.addMarker(markerOptions);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
+            }
+            else {
+                myPostionmarker.setPosition(myPosition);
+            }
+
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
@@ -285,12 +296,48 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         tvLocation.setText(getString(R.string.error));
     }
 
+    private void mapEvents() {
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+
+                // Creating a marker
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                // Setting the position for the marker
+                markerOptions.position(latLng);
+
+                // Setting the title for the marker.
+                // This will be displayed on taping the marker
+                //markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+
+                // Clears the previously touched position
+                mMap.clear();
+
+                // Animating to the touched position
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                // Placing a marker on the touched position
+                Marker marker = mMap.addMarker(markerOptions);
+                String s = getCompleteAddressString(latLng.latitude, latLng.longitude);
+                String lines[] = s.split("\\r?\\n");
+                String ss = "";
+                for (int i = 0; i < lines.length; i++) {
+                    if (i > 0) {
+                        ss += ", ";
+                    }
+                    ss += lines[i];
+                }
+                marker.setTitle(ss);
+            }
+        });
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.mapstyle_night);
-        //mMap.setMapStyle(style);
-//        mMap.move
+        // Setting a click event handler for the map
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
     }
@@ -355,10 +402,11 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         LatLngBounds bounds = builder.build();
 
         int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
+        //int height = getResources().getDisplayMetrics().heightPixels;
         int padding = (int) (width * 0.1); // offset from edges of the map 10% of screen
 
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.animateCamera(cu);
+        isPathExisting = true;
     }
 }

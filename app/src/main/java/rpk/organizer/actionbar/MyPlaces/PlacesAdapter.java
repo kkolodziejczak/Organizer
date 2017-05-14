@@ -1,4 +1,4 @@
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.MyPlaces;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import rpk.organizer.actionbar.MyPlaces.Place;
+import rpk.organizer.actionbar.R;
 
 
 public class PlacesAdapter extends BaseAdapter {

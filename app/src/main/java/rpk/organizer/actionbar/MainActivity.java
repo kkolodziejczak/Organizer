@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +14,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.Random;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
+import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -60,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         Fragment frag = null;
         String tag = "MENU";
         Class fragmentClass;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
+        // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
+        if (fragmentManager.getBackStackEntryCount() == 0) {
+            selectedFragmentClass = null;
+        }
         switch (item.getItemId()) {
             case R.id.mapAction:
                 fragmentClass = ShortestPathActivity.class;
@@ -88,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
             // naciskania przycisku Back w celu opuszczenia aplikacji
             if (fragmentClass != Default.class) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
             }
         }
@@ -119,10 +126,21 @@ public class MainActivity extends AppCompatActivity {
                     PlacesHandler.addPlace(new Place(String.format("Miejsce %d",PlacesHandler.getIter()),"0:00"));
                     PlacesHandler.IterIncrement();
                 }
+    //    public void LoadDataToClasses() {
+//        for (int i = 0; i < 15; i++)
+//            EventList.addEvent(new EventInfo("Ktos", "Meeting", "Kojama" + i, "8:15"));
+//    }
+    public void RandomPlacesGenerate() {
+        Random rnd = new Random();
+        int limit = rnd.nextInt(10);
+        for (int i = 0; i < limit; ++i) {
+            PlacesHandler.addPlace(new Place(String.format("Miejsce %d", PlacesHandler.getIter()), "0:00"));
+            PlacesHandler.IterIncrement();
+        }
     }
 
     // moze sie przydac. identyfikacja odbywa sie po tagach, ktore przypisywane sa do fragmentow w onOptionsItemSelected
-    private Fragment getCurrentFragment(){
+    private Fragment getCurrentFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
         return fragmentManager.findFragmentByTag(fragmentTag);
@@ -132,7 +150,6 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         int count = getSupportFragmentManager().getBackStackEntryCount();
-
         if (count == 0) {
             super.onBackPressed();
         } else {

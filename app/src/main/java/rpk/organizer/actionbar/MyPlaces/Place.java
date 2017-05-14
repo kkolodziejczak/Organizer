@@ -1,4 +1,4 @@
-package rpk.organizer.actionbar;
+package rpk.organizer.actionbar.MyPlaces;
 
 public class Place {
     private String Name;
