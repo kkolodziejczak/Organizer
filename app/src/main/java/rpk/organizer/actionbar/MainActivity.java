@@ -143,6 +143,12 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         } else {
             getSupportFragmentManager().popBackStack();
+            FragmentManager.BackStackEntry entry2;
+            if(count >= 2)
+                entry2 = fragmentManager.getBackStackEntryAt(count-2);
+            else
+                entry2 = fragmentManager.getBackStackEntryAt(0);
+            selectedFragmentClass = entry2.getClass();
         }
 
     }
