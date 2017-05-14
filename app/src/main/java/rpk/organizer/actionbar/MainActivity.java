@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("MainBar");
+        RandomPlacesGenerate();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         // nie odkladamy domyslnego fragmentu (menu) na stos fragmentow
         fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
 //        LoadDataToClasses();
-        RandomPlacesGenerate();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
