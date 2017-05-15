@@ -72,6 +72,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
     public static Event EventToDisplay = null;
     public static String SelectedCalendar = null;
+    public static int SelectedCalendarPosition = -1;
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
@@ -99,12 +100,15 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 
         CalendarNames = new HashMap<String, String>();
 
+
+
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 timeToGet = new DateTime(year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z");
 //                Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
                 SelectedCalendar = (String) mSpinner.getSelectedItem();
+                SelectedCalendarPosition = mSpinner.getSelectedItemPosition();
                 getResultsFromApi(Task.GetEvents);
             }
         });
@@ -114,6 +118,8 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi(Task.GetCalendars);
+
+
     }
 
     /**
@@ -445,6 +451,9 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                         ArrayAdapter<String> gameKindArray= new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, output);
                         gameKindArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinner.setAdapter(gameKindArray);
+
+                        if(SelectedCalendar != null && SelectedCalendarPosition != -1)
+                            mSpinner.setSelection(SelectedCalendarPosition);
                         break;
                 }
             }
