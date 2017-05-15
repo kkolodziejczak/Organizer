@@ -41,6 +41,8 @@ import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.Events;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +59,7 @@ import rpk.organizer.actionbar.Utils.EventList;
 import static android.app.Activity.RESULT_OK;
 
 enum Task{
+    GetFirstEvents,
     GetEvents,
     GetCalendars
 }
@@ -70,9 +73,12 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
+
+    private static List<EventsInfo> EventsInfoList = null;
     public static Event EventToDisplay = null;
     public static String SelectedCalendar = null;
     public static int SelectedCalendarPosition = -1;
+
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
@@ -118,8 +124,14 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi(Task.GetCalendars);
+        getResultsFromApi(Task.GetFirstEvents);
+    }
 
 
+    public static List<EventsInfo> getTodaysEventList(){
+        if(EventsInfoList == null)
+            return null;
+        return EventsInfoList;
     }
 
     /**
@@ -353,6 +365,8 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 try {
                     this.task = params[0];
                     switch (params[0]){
+                        case GetFirstEvents:
+                            return getDataFromApi();
                         case GetEvents:
                             return getDataFromApi();
                         case GetCalendars:
@@ -435,6 +449,9 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 //                mOutputText.setText("No results returned.");
             } else {
                 switch (task){
+                    case GetFirstEvents:
+                        EventsInfoList = EventList.getEvents();
+                        break;
                     case GetEvents:
                         EventAdapter adapter = new EventAdapter(mContext, EventList.getEvents());
                         int l = EventList.Count();
