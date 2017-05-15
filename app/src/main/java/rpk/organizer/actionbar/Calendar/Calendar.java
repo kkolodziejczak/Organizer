@@ -406,7 +406,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 if (start == null)
                     start = event.getStart().getDate();
 
-                EventList.addEvent(new EventsInfo(event.getSummary(), DataUtils.toHourMin(start,":")));
+                EventList.addEvent(new EventsInfo(event.getSummary(), DataUtils.toHourMin(start,":"),event.getLocation()));
                 EventList.addGoogleEvent(event);
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start,":")));

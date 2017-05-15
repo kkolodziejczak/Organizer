@@ -10,6 +10,12 @@ public class EventsInfo {
             this.what = _what;
             this.time = time;
         }
+        EventsInfo(String _what, String time, String Where){
+            this.what = _what;
+            this.time = time;
+            this.where = Where;
+        }
+
         EventsInfo(String _who, String _what, String _where, String time){
             this.who = _who;
             this.what = _what;
