@@ -16,11 +16,12 @@
     <CalendarView
         android:id="@+id/Calendar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="320dp"
         android:layout_below="@+id/CalendarNames"
         android:minHeight="150dp"
+        android:firstDayOfWeek="2"
         />
-    <!--android:firstDayOfWeek="2"-->
+
 
     <ListView
         android:id="@+id/EventList"
