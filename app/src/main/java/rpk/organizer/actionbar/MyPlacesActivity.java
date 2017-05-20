@@ -92,13 +92,14 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     }
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
         String place = PlacesHandler.getPlace((int)id).getPosition();
-        Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.activity_main), place, Snackbar.LENGTH_SHORT);
-        mySnackbar.show();
         final FragmentTransaction ft =getFragmentManager().beginTransaction();
         Class frag =ShortestPathActivity.class;
         Fragment fragment;
         try {
             fragment= (Fragment) frag.newInstance();
+            Bundle args = new Bundle();
+            args.putString("PLACE",place);
+            fragment.setArguments(args);
             ft.replace(R.id.activity_main,fragment,"SHORTEST_PATH");
             ft.addToBackStack(null);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
