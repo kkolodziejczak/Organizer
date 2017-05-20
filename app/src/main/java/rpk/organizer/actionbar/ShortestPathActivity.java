@@ -17,6 +17,7 @@
 package rpk.organizer.actionbar;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -58,12 +59,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
 import rpk.organizer.actionbar.ShortestPath.Route;
+import rpk.organizer.actionbar.Utils.PlacesHandler;
 
-public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, DirectionFinderListener, OnMapReadyCallback {
+public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, DirectionFinderListener, OnMapReadyCallback,GoogleMap.OnInfoWindowClickListener {
 
     private TextView tvLocation;
     private TextView tvLocationAdress;
@@ -284,7 +287,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
             // }
             ///mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title("");
+            MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title("Add to my places");
             if(myPostionmarker == null){
                 myPostionmarker = mMap.addMarker(markerOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
@@ -353,6 +356,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         // Setting a click event handler for the map
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);
     }
 
     @Override
@@ -421,5 +425,11 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
         mMap.animateCamera(cu);
         isPathExisting = true;
+    }
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(getContext(), "Info window clicked", Toast.LENGTH_SHORT).show();
+        String czas = "0:00";
+        PlacesHandler.addPlace(new Place(tvLocationAdress.getText().toString().trim(), tvLocationAdress.getText().toString(), czas));
     }
 }

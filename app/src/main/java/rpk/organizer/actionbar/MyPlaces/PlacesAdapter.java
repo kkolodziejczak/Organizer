@@ -46,11 +46,12 @@ public class PlacesAdapter extends BaseAdapter {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.place, null);
         }
-        TextView godzina = (TextView)convertView.findViewById(R.id.Place);
-        godzina.setText(wpis.getName());
+        TextView placeName = (TextView)convertView.findViewById(R.id.Place);
+        placeName.setMaxLines(1);
+        placeName.setText(wpis.getName());
 
-        TextView Opis = (TextView)convertView.findViewById(R.id.Time);
-        Opis.setText(wpis.getTime());
+        TextView time = (TextView)convertView.findViewById(R.id.Time);
+        time.setText(wpis.getTime());
 
         return convertView;
     }
