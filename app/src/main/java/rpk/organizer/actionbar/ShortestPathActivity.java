@@ -122,9 +122,17 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         });
         Bundle arg = getArguments();
         String msgStr;
+        tvLocationAdress.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                etOrigin.setText(tvLocationAdress.getText().toString());
+            }
+
+        });
         if(arg!=null) {
             msgStr = arg.getString("PLACE");
             Toast.makeText(getContext(), msgStr, Toast.LENGTH_LONG).show();
+            etOrigin.setText(msgStr);
         }
     }
 

@@ -27,7 +27,8 @@
         android:textAllCaps="true"
         android:textColor="#000"
         android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:clickable="true"/>
 
     <EditText
         android:layout_width="match_parent"
