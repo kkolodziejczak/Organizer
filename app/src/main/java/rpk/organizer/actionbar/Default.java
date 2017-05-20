@@ -29,10 +29,6 @@ public class Default extends Fragment implements View.OnClickListener{
         Bundle bundle = getArguments();
         res1 = (Button) getActivity().findViewById(R.id.button5);
         res1.setOnClickListener(this);
-        res2 = (Button) getActivity().findViewById(R.id.button6);
-        res2.setOnClickListener(this);
-        res3 = (Button) getActivity().findViewById(R.id.button7);
-        res3.setOnClickListener(this);
     }
 
 
@@ -54,14 +50,6 @@ public class Default extends Fragment implements View.OnClickListener{
                 }
                 MainActivity.selectedFragmentClass = fragmentClass;
                 fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack("ALARM").commit();
-
-                break;
-            case R.id.button6:
-                //TODO: zmianieć na framgent!
-//                intent = new Intent(getActivity(), Calendar.class);
-//                startActivity(intent);
-                break;
-            case R.id.button7:
 
                 break;
         }
