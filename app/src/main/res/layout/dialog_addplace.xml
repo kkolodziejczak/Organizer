@@ -12,12 +12,12 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Podaj punkt końcowy"
+        android:hint="Destination address"
         android:id="@+id/etDestination" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Podaj nazwe miejsca"
+        android:hint="Place name"
         android:id="@+id/placeName" />
 
     <RelativeLayout
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:id="@+id/customDialogCancel"
-            android:text="Cancer" />
+            android:text="Cancel" />
 
 
         <Button

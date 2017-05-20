@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,13 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                     public void onClick(View v) {
                         EditText edit=(EditText) dialog.findViewById(R.id.placeName);
                         EditText edit2=(EditText) dialog.findViewById(R.id.etDestination);
-                        PlacesHandler.addPlace(new Place(edit.getText().toString(),edit2.getText().toString(),"0:00"));
+                        String czas ="0:00";
+                        if(edit.getText().toString().isEmpty()) {
+                            PlacesHandler.addPlace(new Place(edit2.getText().toString(), edit2.getText().toString(), czas));
+                        }
+                        else{
+                            PlacesHandler.addPlace(new Place(edit.getText().toString(), edit2.getText().toString(), czas));
+                        }
                         dialog.dismiss();
                         //dodać element gdzieś gdzie zapamięta
 
@@ -87,6 +94,20 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         String place = PlacesHandler.getPlace((int)id).getPosition();
         Snackbar mySnackbar = Snackbar.make(getActivity().findViewById(R.id.activity_main), place, Snackbar.LENGTH_SHORT);
         mySnackbar.show();
+        final FragmentTransaction ft =getFragmentManager().beginTransaction();
+        Class frag =ShortestPathActivity.class;
+        Fragment fragment;
+        try {
+            fragment= (Fragment) frag.newInstance();
+            ft.replace(R.id.activity_main,fragment,"SHORTEST_PATH");
+            ft.addToBackStack(null);
+            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            ft.commit();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         //Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
         // Then you start a new Activity via Intent
         //Intent intent = new Intent();
