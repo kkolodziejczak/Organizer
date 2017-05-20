@@ -135,7 +135,7 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         if(arg!=null) {
             msgStr = arg.getString("PLACE");
             Toast.makeText(getContext(), msgStr, Toast.LENGTH_LONG).show();
-            etOrigin.setText(msgStr);
+            etDestination.setText(msgStr);
         }
     }
 
