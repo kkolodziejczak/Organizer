@@ -94,7 +94,7 @@ public class ShortestPathActivity extends Fragment
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
     private AutoCompleteTextView etOrigin;
-    private EditText etDestination;
+    private AutoCompleteTextView etDestination;
     boolean isPathExisting = false;
 
     private static final int GOOGLE_API_CLIENT_ID = 0;
@@ -129,6 +129,7 @@ public class ShortestPathActivity extends Fragment
         map.getMapAsync(this);
 
 
+        // Google Places
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
                 .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, this)
@@ -140,7 +141,11 @@ public class ShortestPathActivity extends Fragment
         mPlaceArrayAdapter = new PlaceArrayAdapter(getContext(), android.R.layout.simple_list_item_1,
                 BOUNDS_MOUNTAIN_VIEW, null);
         etOrigin.setAdapter(mPlaceArrayAdapter);
-        etDestination = (EditText) view.findViewById(R.id.etDestination);
+        etDestination = (AutoCompleteTextView) view.findViewById(R.id.etDestination);
+        etDestination.setThreshold(3);
+        etDestination.setOnItemClickListener(mAutocompleteClickListener);
+        etDestination.setAdapter(mPlaceArrayAdapter);
+
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,6 +242,10 @@ public class ShortestPathActivity extends Fragment
     public void onPause() {
         assistant.stop();
         super.onPause();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
     }
 
     @NonNull
