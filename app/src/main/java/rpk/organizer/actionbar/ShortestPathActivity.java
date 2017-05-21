@@ -42,6 +42,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,10 +67,15 @@ import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
+import rpk.organizer.actionbar.ShortestPath.PlaceArrayAdapter;
 import rpk.organizer.actionbar.ShortestPath.Route;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
-public class ShortestPathActivity extends Fragment implements LocationAssistant.Listener, DirectionFinderListener, OnMapReadyCallback,GoogleMap.OnInfoWindowClickListener {
+public class ShortestPathActivity extends Fragment
+        implements LocationAssistant.Listener, DirectionFinderListener,
+        OnMapReadyCallback,GoogleMap.OnInfoWindowClickListener,
+        GoogleApiClient.OnConnectionFailedListener,
+        GoogleApiClient.ConnectionCallbacks {
 
     private TextView tvLocation;
     private TextView tvLocationAdress;
@@ -84,6 +91,10 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     private EditText etOrigin;
     private EditText etDestination;
     boolean isPathExisting = false;
+
+    private PlaceArrayAdapter mPlaceArrayAdapter;
+    private static final String LOG_TAG = "ShortestPathActivity";
+    private GoogleApiClient mGoogleApiClient;
 
     @Nullable
     @Override
@@ -392,7 +403,8 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         originMarkers = new ArrayList<>();
         destinationMarkers = new ArrayList<>();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
-
+        if (routes.size() == 0)
+            return;
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
             ((TextView) getView().findViewById(R.id.tvDuration)).setText(route.duration.text);
@@ -434,5 +446,25 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
         String czas = "0:00";
         PlacesHandler.addPlace(new Place(tvLocationAdress.getText().toString().trim(), tvLocationAdress.getText().toString(), czas));
         PlacesHandler.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
+        Log.i(LOG_TAG, "Google Places API connected.");
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mPlaceArrayAdapter.setGoogleApiClient(null);
+        Log.e(LOG_TAG, "Google Places API connection suspended.");
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e(LOG_TAG, "Google Places API connection failed with error code: "
+                + connectionResult.getErrorCode());
+
+        Toast.makeText(getContext(), "Google Places API connection failed with error code:" + connectionResult.getErrorCode(), Toast.LENGTH_LONG).show();
     }
 }
