@@ -17,7 +17,6 @@
 package rpk.organizer.actionbar;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,12 +30,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -44,6 +45,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -88,13 +93,16 @@ public class ShortestPathActivity extends Fragment
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
-    private EditText etOrigin;
+    private AutoCompleteTextView etOrigin;
     private EditText etDestination;
     boolean isPathExisting = false;
 
+    private static final int GOOGLE_API_CLIENT_ID = 0;
     private PlaceArrayAdapter mPlaceArrayAdapter;
     private static final String LOG_TAG = "ShortestPathActivity";
     private GoogleApiClient mGoogleApiClient;
+    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
+            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
 
     @Nullable
     @Override
@@ -121,8 +129,17 @@ public class ShortestPathActivity extends Fragment
         map.getMapAsync(this);
 
 
-
-        etOrigin = (EditText) view.findViewById(R.id.etOrigin);
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(Places.GEO_DATA_API)
+                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, this)
+                .addConnectionCallbacks(this)
+                .build();
+        etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
+        etOrigin.setThreshold(3);
+        etOrigin.setOnItemClickListener(mAutocompleteClickListener);
+        mPlaceArrayAdapter = new PlaceArrayAdapter(getContext(), android.R.layout.simple_list_item_1,
+                BOUNDS_MOUNTAIN_VIEW, null);
+        etOrigin.setAdapter(mPlaceArrayAdapter);
         etDestination = (EditText) view.findViewById(R.id.etDestination);
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
@@ -145,12 +162,51 @@ public class ShortestPathActivity extends Fragment
             }
 
         });
-        if(arg!=null) {
+        if(arg != null) {
             msgStr = arg.getString("PLACE");
             Toast.makeText(getContext(), msgStr, Toast.LENGTH_LONG).show();
             etDestination.setText(msgStr);
         }
     }
+
+    private AdapterView.OnItemClickListener mAutocompleteClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
+            Log.i(LOG_TAG, "Selected: " + item.description);
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+            Log.i(LOG_TAG, "Fetching details for ID: " + item.placeId);
+        }
+    };
+
+    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
+            = new ResultCallback<PlaceBuffer>() {
+        @Override
+        public void onResult(PlaceBuffer places) {
+            if (!places.getStatus().isSuccess()) {
+                Log.e(LOG_TAG, "Place query did not complete. Error: " +
+                        places.getStatus().toString());
+                return;
+            }
+            // Selecting the first object buffer.
+            final com.google.android.gms.location.places.Place place = places.get(0);
+            CharSequence attributions = places.getAttributions();
+            /*
+            mNameTextView.setText(Html.fromHtml(place.getName() + ""));
+            mAddressTextView.setText(Html.fromHtml(place.getAddress() + ""));
+            mIdTextView.setText(Html.fromHtml(place.getId() + ""));
+            mPhoneTextView.setText(Html.fromHtml(place.getPhoneNumber() + ""));
+            mWebTextView.setText(place.getWebsiteUri() + "");
+            if (attributions != null) {
+                mAttTextView.setText(Html.fromHtml(attributions.toString()));
+            }
+            */
+        }
+    };
 
     private void sendRequest() {
         String origin = etOrigin.getText().toString();
