@@ -1,6 +1,7 @@
 package rpk.organizer.actionbar.ShortestPath;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -52,6 +53,7 @@ public class DirectionFinder {
         @Override
         protected String doInBackground(String... params) {
             String link = params[0];
+            Log.d("JSON_LINK", link);
             try {
                 URL url = new URL(link);
                 InputStream is = url.openConnection().getInputStream();

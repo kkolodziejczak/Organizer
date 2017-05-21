@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public static void AddNewFragmentOnTop(Class o, String tag){
+    public static void AddNewFragmentOnTop(Class o, String tag) {
         Fragment frag = null;
         Class fragmentClass = o;
         try {
@@ -119,13 +119,13 @@ public class MainActivity extends AppCompatActivity {
         selectedFragmentClass = fragmentClass;
     }
 
-    public void RandomPlacesGenerate(){
-                Random rnd = new Random();
-                int limit=rnd.nextInt(10);
-                for(int i=0;i<limit;++i){
-                    PlacesHandler.addPlace(new Place(String.format("Miejsce %d",PlacesHandler.getIter()),"0:00"));
-                    PlacesHandler.IterIncrement();
-                }
+    public void RandomPlacesGenerate() {
+        Random rnd = new Random();
+        int limit = rnd.nextInt(10);
+        for (int i = 0; i < limit; ++i) {
+            PlacesHandler.addPlace(new Place(String.format("Miejsce %d", PlacesHandler.getIter()), "0:00"));
+            PlacesHandler.IterIncrement();
+        }
     }
 
     // moze sie przydac. identyfikacja odbywa sie po tagach, ktore przypisywane sa do fragmentow w onOptionsItemSelected
@@ -143,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         } else {
             getSupportFragmentManager().popBackStack();
-            if(count >= 2)
-                selectedFragmentClass = fragmentManager.getBackStackEntryAt(count-2).getClass();
+            if (count >= 2)
+                selectedFragmentClass = fragmentManager.getBackStackEntryAt(count - 2).getClass();
             else
                 selectedFragmentClass = fragmentManager.getBackStackEntryAt(0).getClass();
         }
