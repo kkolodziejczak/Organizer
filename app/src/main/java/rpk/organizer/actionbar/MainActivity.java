@@ -15,6 +15,7 @@ import java.util.Random;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
 import rpk.organizer.actionbar.MyPlaces.Place;
+import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.Utils.BazaDanych;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(),this);
+        PlacesHandler.setAdapter(adapter);
         JodaTimeAndroid.init(this);
 
         BazaDanych db = new BazaDanych(this);
