@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
+
     <!-- nie wiem czy potrzebne ale na razie jest -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
@@ -41,7 +42,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
+        <receiver android:name="AlarmReceiver"/>
     </application>
 
 </manifest>
