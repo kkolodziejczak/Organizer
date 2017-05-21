@@ -28,6 +28,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     private Context mContext;
     private FloatingActionButton fab;
     private PlacesAdapter adapter;
+    private int IsClickedFlag=0;
 
     @Nullable
     @Override
@@ -99,28 +100,46 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
             }
         });
         populate();
+
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        IsClickedFlag=0;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IsClickedFlag=0;
+    }
+
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+        if(IsClickedFlag==0) {
 
-        String place = PlacesHandler.getPlace((int)id).getPosition();
-        final FragmentTransaction ft =getFragmentManager().beginTransaction();
-        Class frag =ShortestPathActivity.class;
-        Fragment fragment;
-        try {
-
-            fragment= (Fragment) frag.newInstance();
-            Bundle args = new Bundle();
-            args.putString("PLACE",place);
-            fragment.setArguments(args);
-            ft.replace(R.id.activity_main,fragment,"SHORTEST_PATH");
-            ft.addToBackStack(null);
-            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            ft.commit();
-        } catch (java.lang.InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            String place = PlacesHandler.getPlace((int) id).getPosition();
+            MainActivity.AddNewFragmentOnTop(ShortestPathActivity.class,"SHORTEST_PATH",place);
+//            final FragmentTransaction ft = getFragmentManager().beginTransaction();
+//            Class frag = ShortestPathActivity.class;
+//            Fragment fragment;
+//            try {
+//
+//                fragment = (Fragment) frag.newInstance();
+//                Bundle args = new Bundle();
+//                args.putString("PLACE", place);
+//                fragment.setArguments(args);
+//                ft.replace(R.id.activity_main, fragment, "SHORTEST_PATH");
+//                ft.addToBackStack(null);
+//                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//                ft.commit();
+//            } catch (java.lang.InstantiationException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
         }
+        IsClickedFlag=1;
         //Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
         // Then you start a new Activity via Intent
         //Intent intent = new Intent();

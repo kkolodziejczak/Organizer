@@ -127,6 +127,24 @@ public class MainActivity extends AppCompatActivity {
 
         selectedFragmentClass = fragmentClass;
     }
+    public static void AddNewFragmentOnTop(Class o, String tag,String place) {
+        Fragment frag = null;
+        Bundle args = new Bundle();
+        args.putString("PLACE", place);
+        Class fragmentClass = o;
+        try {
+            frag = (Fragment) fragmentClass.newInstance();
+            frag.setArguments(args);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (selectedFragmentClass != fragmentClass && fragmentClass != Default.class)
+            fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
+
+        selectedFragmentClass = fragmentClass;
+    }
 
     public void RandomPlacesGenerate() {
         //Random rnd = new Random();
