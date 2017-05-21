@@ -1,5 +1,7 @@
 package rpk.organizer.actionbar.Utils;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ public class PlacesHandler {
     private static List<Place> Places;
     private static int iter=0;
     private static PlacesAdapter adapter;
+    public static BazaDanych db;
     public static void addPlace(Place place){
         if(Places == null)
             Places = new ArrayList<>();

@@ -75,9 +75,10 @@ public class PlacesAdapter extends BaseAdapter {
                 dialogButtonOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        PlacesHandler.db.usun(PlacesHandler.getPlace(position).getName());
                         placesList.remove(position);
-                        dialog.dismiss();
                         notifyDataSetChanged();
+                        dialog.dismiss();
                     }
                 });
 

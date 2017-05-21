@@ -509,7 +509,9 @@ public class ShortestPathActivity extends Fragment
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getContext(), "Place added", Toast.LENGTH_SHORT).show();
         String czas = "0:00";
-        PlacesHandler.addPlace(new Place(tvLocationAdress.getText().toString().trim(), tvLocationAdress.getText().toString(), czas));
+        Place pl = new Place(tvLocationAdress.getText().toString().trim(), tvLocationAdress.getText().toString(), czas);
+        PlacesHandler.addPlace(pl);
+        PlacesHandler.db.dodaj(pl);
         PlacesHandler.getAdapter().notifyDataSetChanged();
     }
 

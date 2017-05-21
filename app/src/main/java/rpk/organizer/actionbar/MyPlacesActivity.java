@@ -2,6 +2,7 @@ package rpk.organizer.actionbar;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -40,6 +41,8 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         mContext = getContext();
+        adapter = new PlacesAdapter(PlacesHandler.getPlaces(),mContext);
+        PlacesHandler.setAdapter(adapter);
         PlacesListView = (ListView)getActivity().findViewById(R.id.lista);
         PlacesListView.post(new Runnable() {
             @Override
@@ -76,16 +79,20 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                         EditText edit=(EditText) dialog.findViewById(R.id.placeName);
                         EditText edit2=(EditText) dialog.findViewById(R.id.etDestination);
                         String czas ="0:00";
+                        Place place;
                         if(edit.getText().toString().isEmpty()) {
-                            PlacesHandler.addPlace(new Place(edit2.getText().toString(), edit2.getText().toString(), czas));
+                            place=new Place(edit2.getText().toString(), edit2.getText().toString(), czas);
+                            PlacesHandler.addPlace(place);
+                            adapter.notifyDataSetChanged();
                         }
                         else{
-                            PlacesHandler.addPlace(new Place(edit.getText().toString(), edit2.getText().toString(), czas));
+                            place = new Place(edit.getText().toString(), edit2.getText().toString(), czas);
+                            PlacesHandler.addPlace(place);
+                            adapter.notifyDataSetChanged();
                         }
+                        PlacesHandler.db.dodaj(place);
                         adapter.notifyDataSetChanged();
                         dialog.dismiss();
-                        //dodać element gdzieś gdzie zapamięta
-
                     }
                 });
                 dialog.show();
@@ -94,11 +101,13 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         populate();
     }
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+
         String place = PlacesHandler.getPlace((int)id).getPosition();
         final FragmentTransaction ft =getFragmentManager().beginTransaction();
         Class frag =ShortestPathActivity.class;
         Fragment fragment;
         try {
+
             fragment= (Fragment) frag.newInstance();
             Bundle args = new Bundle();
             args.putString("PLACE",place);
@@ -122,8 +131,6 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         //startActivity(intent);
     }
     public void populate() {
-                adapter = new PlacesAdapter(PlacesHandler.getPlaces(),mContext);
                 PlacesListView.setAdapter(adapter);
-                PlacesHandler.setAdapter(adapter);
     }
 }

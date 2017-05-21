@@ -15,12 +15,14 @@ import java.util.Random;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
 import rpk.organizer.actionbar.MyPlaces.Place;
+import rpk.organizer.actionbar.Utils.BazaDanych;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
 
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
+    private int IsListCreated=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +31,17 @@ public class MainActivity extends AppCompatActivity {
 
         JodaTimeAndroid.init(this);
 
+        BazaDanych db = new BazaDanych(this);
+        PlacesHandler.db=db;
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("MainBar");
-        RandomPlacesGenerate();
+        if(IsListCreated==0){
+            RandomPlacesGenerate();
+            IsListCreated=1;
+        }
+
 
         fragmentManager = getSupportFragmentManager();
 
@@ -120,12 +129,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void RandomPlacesGenerate() {
-        Random rnd = new Random();
-        int limit = rnd.nextInt(10);
-        for (int i = 0; i < limit; ++i) {
-            PlacesHandler.addPlace(new Place(String.format("Miejsce %d", PlacesHandler.getIter()), "0:00"));
-            PlacesHandler.IterIncrement();
-        }
+        //Random rnd = new Random();
+        //int limit = rnd.nextInt(10);
+       // for (int i = 0; i < limit; ++i) {
+        //    PlacesHandler.addPlace(new Place(String.format("Miejsce %d", PlacesHandler.getIter()), "0:00"));
+        //    PlacesHandler.IterIncrement();
+       // }
+        PlacesHandler.db.loadAllPlacess();
     }
 
     // moze sie przydac. identyfikacja odbywa sie po tagach, ktore przypisywane sa do fragmentow w onOptionsItemSelected

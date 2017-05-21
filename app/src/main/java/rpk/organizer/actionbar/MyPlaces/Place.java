@@ -1,6 +1,8 @@
 package rpk.organizer.actionbar.MyPlaces;
 
-public class Place {
+import java.io.Serializable;
+
+public class Place implements Serializable {
     private String Name;
     private String Position;
     private String Time;
@@ -8,7 +10,7 @@ public class Place {
     public Place(String name, String time) {
         Name = name;
         Time = time;
-        Position="Police Kinga";
+        Position="zut rciitt";
     }
     public Place(String name,String position,String time){
         Name=name;
