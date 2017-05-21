@@ -36,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ import java.util.List;
 import java.util.Locale;
 
 import rpk.organizer.actionbar.MyPlaces.Place;
+import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
@@ -428,8 +430,9 @@ public class ShortestPathActivity extends Fragment implements LocationAssistant.
     }
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getContext(), "Info window clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Place added", Toast.LENGTH_SHORT).show();
         String czas = "0:00";
         PlacesHandler.addPlace(new Place(tvLocationAdress.getText().toString().trim(), tvLocationAdress.getText().toString(), czas));
+        PlacesHandler.getAdapter().notifyDataSetChanged();
     }
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -25,6 +26,8 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     private ListView PlacesListView;
     private Context mContext;
     private FloatingActionButton fab;
+    private PlacesAdapter adapter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,12 +82,12 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                         else{
                             PlacesHandler.addPlace(new Place(edit.getText().toString(), edit2.getText().toString(), czas));
                         }
+                        adapter.notifyDataSetChanged();
                         dialog.dismiss();
                         //dodać element gdzieś gdzie zapamięta
 
                     }
                 });
-
                 dialog.show();
             }
         });
@@ -119,7 +122,8 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         //startActivity(intent);
     }
     public void populate() {
-                PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(),mContext);
+                adapter = new PlacesAdapter(PlacesHandler.getPlaces(),mContext);
                 PlacesListView.setAdapter(adapter);
+                PlacesHandler.setAdapter(adapter);
     }
 }
