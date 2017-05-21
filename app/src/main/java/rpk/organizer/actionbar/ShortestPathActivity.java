@@ -365,7 +365,7 @@ public class ShortestPathActivity extends Fragment
             // }
             ///mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
-            MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title("Add to my places");
+            MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title(geolocation);
             if(myPostionmarker == null){
                 myPostionmarker = mMap.addMarker(markerOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
@@ -509,7 +509,7 @@ public class ShortestPathActivity extends Fragment
     public void onInfoWindowClick(Marker marker) {
         Toast.makeText(getContext(), "Place added", Toast.LENGTH_SHORT).show();
         String czas = "0:00";
-        Place pl = new Place(tvLocationAdress.getText().toString().trim(), tvLocationAdress.getText().toString(), czas);
+        Place pl = new Place(marker.getTitle().trim(), marker.getTitle(), czas);
         PlacesHandler.addPlace(pl);
         PlacesHandler.db.dodaj(pl);
         PlacesHandler.getAdapter().notifyDataSetChanged();
