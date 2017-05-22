@@ -51,6 +51,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                 PlacesListView.requestLayout();
             }
         });
+        PlacesListView.setAdapter(adapter);
         PlacesListView.setOnItemClickListener(this);
         fab = (FloatingActionButton)getActivity().findViewById(R.id.fapPlace);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +151,6 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         //startActivity(intent);
     }
     public void populate() {
-                PlacesListView.setAdapter(adapter);
+
     }
 }

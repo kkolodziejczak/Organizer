@@ -22,7 +22,7 @@ public class PlacesHandler {
 
     public static List<Place> getPlaces(){
         if(Places == null)
-            return new ArrayList<>();
+            Places = new ArrayList<>();
         return Places;
     }
 
