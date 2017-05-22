@@ -24,6 +24,7 @@ import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -67,7 +68,7 @@ enum Task{
 
 //Fragment
 public class Calendar extends Fragment implements EasyPermissions.PermissionCallbacks {
-    GoogleAccountCredential mCredential;
+    static public GoogleAccountCredential mCredential;
     ProgressDialog mProgress;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -83,12 +84,12 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
     private static final String[] SCOPES = {CalendarScopes.CALENDAR_READONLY};
-    private ListView EventListView;
-    private Context mContext;
+    private static ListView EventListView;
+    private static Context mContext;
     private CalendarView mCalendar;
-    private DateTime timeToGet;
-    private Spinner mSpinner;
-    public HashMap<String, String> CalendarNames;
+    private static DateTime timeToGet;
+    private static Spinner mSpinner;
+    public static HashMap<String, String> CalendarNames;
 
     @Nullable
     @Override
@@ -103,14 +104,13 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         mContext = getContext();
         EventListView = (ListView) getActivity().findViewById(R.id.EventList);
         mCalendar = (CalendarView) getActivity().findViewById(R.id.Calendar);
+
         if(Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP) {
             mCalendar.setFirstDayOfWeek(java.util.Calendar.SUNDAY);
         }
         mSpinner = (Spinner) getActivity().findViewById(R.id.CalendarNames);
 
         CalendarNames = new HashMap<String, String>();
-
-
 
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -128,7 +128,6 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi(Task.GetCalendars);
-        getResultsFromApi(Task.GetFirstEvents);
     }
 
 
@@ -151,12 +150,12 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (!isDeviceOnline()) {
-//            mOutputText.setText("No network connection available.");
+            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_LONG).show();
+//            mOutputText.setText();
         } else {
             new MakeRequestTask(mCredential).execute(task);
         }
     }
-
     /**
      * Attempts to set the account used with the API credentials. If an account
      * name was previously saved it will use that one; otherwise an account
@@ -450,11 +449,11 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             if (output == null || output.size() == 0) {
                 EventAdapter adapter = new EventAdapter(mContext, new ArrayList<EventsInfo>());
                 EventListView.setAdapter(adapter);
-//                mOutputText.setText("No results returned.");
             } else {
                 switch (task){
                     case GetFirstEvents:
                         EventsInfoList = EventList.getEvents();
+                        getResultsFromApi(Task.GetEvents);
                         break;
                     case GetEvents:
                         EventAdapter adapter = new EventAdapter(mContext, EventList.getEvents());
@@ -475,6 +474,8 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 
                         if(SelectedCalendar != null && SelectedCalendarPosition != -1)
                             mSpinner.setSelection(SelectedCalendarPosition);
+
+                        getResultsFromApi(Task.GetFirstEvents);
                         break;
                 }
             }
@@ -484,18 +485,18 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
         protected void onCancelled() {
 //            mProgress.hide();
             if (mLastError != null) {
-                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-                    showGooglePlayServicesAvailabilityErrorDialog(
-                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-                                    .getConnectionStatusCode());
-                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-                    startActivityForResult(
-                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-                            Calendar.REQUEST_AUTHORIZATION);
-                } else {
-//                    mOutputText.setText("The following error occurred:\n"
-//                            + mLastError.getMessage());
-                }
+//                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
+//                    showGooglePlayServicesAvailabilityErrorDialog(
+//                            ((GooglePlayServicesAvailabilityIOException) mLastError)
+//                                    .getConnectionStatusCode());
+//                } else if (mLastError instanceof UserRecoverableAuthIOException) {
+//                    startActivityForResult(
+//                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
+//                            Calendar.REQUEST_AUTHORIZATION);
+//                } else {
+////                    mOutputText.setText("The following error occurred:\n"
+////                            + mLastError.getMessage());
+//                }
             } else {
 //                mOutputText.setText("Request cancelled.");
             }

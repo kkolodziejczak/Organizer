@@ -9,8 +9,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.util.ExponentialBackOff;
+import com.google.api.services.calendar.CalendarScopes;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         // nie odkladamy domyslnego fragmentu (menu) na stos fragmentow
         fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
 //        LoadDataToClasses();
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
