@@ -28,25 +28,25 @@ public class MainActivity extends AppCompatActivity {
 
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
-    private int IsListCreated=0;
+    private int IsListCreated = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(),this);
+        PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(), this);
         PlacesHandler.setAdapter(adapter);
         JodaTimeAndroid.init(this);
 
         BazaDanych db = new BazaDanych(this);
-        PlacesHandler.db=db;
+        PlacesHandler.db = db;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
         toolbar.setTitle("MainBar");
-        if(IsListCreated==0){
+        if (IsListCreated == 0) {
             RandomPlacesGenerate();
-            IsListCreated=1;
+            IsListCreated = 1;
         }
 
 
@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity {
 
         selectedFragmentClass = fragmentClass;
     }
-    public static void AddNewFragmentOnTop(Class o, String tag,String place) {
+
+    public static void AddNewFragmentOnTop(Class o, String tag, String place) {
         Fragment frag = null;
         Bundle args = new Bundle();
         args.putString("PLACE", place);
@@ -157,10 +158,10 @@ public class MainActivity extends AppCompatActivity {
     public void RandomPlacesGenerate() {
         //Random rnd = new Random();
         //int limit = rnd.nextInt(10);
-       // for (int i = 0; i < limit; ++i) {
+        // for (int i = 0; i < limit; ++i) {
         //    PlacesHandler.addPlace(new Place(String.format("Miejsce %d", PlacesHandler.getIter()), "0:00"));
         //    PlacesHandler.IterIncrement();
-       // }
+        // }
         PlacesHandler.db.loadAllPlacess();
     }
 
