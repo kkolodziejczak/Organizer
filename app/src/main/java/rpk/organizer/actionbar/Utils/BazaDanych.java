@@ -49,6 +49,7 @@ public class BazaDanych extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
+        PlacesHandler.clear();
         if (cursor.moveToFirst()) {
             do {
                 PlacesHandler.addPlace(new Place(cursor.getString(1), cursor.getString(2), "0:00"));

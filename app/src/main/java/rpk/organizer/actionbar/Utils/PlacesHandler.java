@@ -43,4 +43,9 @@ public class PlacesHandler {
     public static PlacesAdapter getAdapter(){
         return adapter;
     }
+
+    public static void clear() {
+        if(Places != null)
+            Places.clear();
+    }
 }
