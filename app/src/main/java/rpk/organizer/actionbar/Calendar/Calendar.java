@@ -149,12 +149,15 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else if (!isDeviceOnline()) {
-            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_LONG).show();
-//            mOutputText.setText();
-        } else {
+        } else  {
             new MakeRequestTask(mCredential).execute(task);
         }
+
+//
+//        if (!isDeviceOnline()) {
+//            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+////            mOutputText.setText();
+//        } else
     }
     /**
      * Attempts to set the account used with the API credentials. If an account
@@ -289,8 +292,12 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
      */
     private boolean isDeviceOnline() {
         ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+
+        if(connMgr != null){
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            return (networkInfo != null && networkInfo.isConnected());
+        }
+        return false;
     }
 
     /**
