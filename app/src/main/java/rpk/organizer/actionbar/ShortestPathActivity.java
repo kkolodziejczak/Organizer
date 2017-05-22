@@ -97,7 +97,8 @@ public class ShortestPathActivity extends Fragment
     private AutoCompleteTextView etDestination;
     boolean isPathExisting = false;
 
-    private static final int GOOGLE_API_CLIENT_ID = 0;
+    private static Context mContext;
+    private static int GOOGLE_API_CLIENT_ID = 0;
     private PlaceArrayAdapter mPlaceArrayAdapter;
     private static final String LOG_TAG = "ShortestPathActivity";
     private GoogleApiClient mGoogleApiClient;
@@ -129,10 +130,12 @@ public class ShortestPathActivity extends Fragment
         map.getMapAsync(this);
 
 
+        mContext = getContext();
+
         // Google Places
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, this)
+                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID++, this)
                 .addConnectionCallbacks(this)
                 .build();
         etOrigin = (AutoCompleteTextView) view.findViewById(R.id.etOrigin);
@@ -332,7 +335,7 @@ public class ShortestPathActivity extends Fragment
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
-        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
