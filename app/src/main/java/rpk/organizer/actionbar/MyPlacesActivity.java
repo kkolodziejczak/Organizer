@@ -17,6 +17,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
@@ -83,17 +84,35 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                         String czas ="0:00";
                         Place place;
                         if(edit.getText().toString().isEmpty()) {
-                            place=new Place(edit2.getText().toString(), edit2.getText().toString(), czas);
-                            PlacesHandler.addPlace(place);
-                            adapter.notifyDataSetChanged();
+                            if(edit2.getText().toString().isEmpty()){
+                                Toast.makeText(getContext(), "Place can not be empty", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                if(!PlacesHandler.isAlreadyAdded(edit2.getText().toString())) {
+                                    place = new Place(edit2.getText().toString(), edit2.getText().toString(), czas);
+                                    PlacesHandler.addPlace(place);
+                                    adapter.notifyDataSetChanged();
+                                    PlacesHandler.db.dodaj(place);
+                                }else {
+                                    Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                         else{
-                            place = new Place(edit.getText().toString(), edit2.getText().toString(), czas);
-                            PlacesHandler.addPlace(place);
-                            adapter.notifyDataSetChanged();
+                            if(edit2.getText().toString().isEmpty()){
+                                Toast.makeText(getContext(), "Place destination can not be empty", Toast.LENGTH_SHORT).show();
+                            }else {
+                                if (PlacesHandler.isAlreadyAdded(edit.getText().toString())) {
+                                    place = new Place(edit.getText().toString(), edit2.getText().toString(), czas);
+                                    PlacesHandler.addPlace(place);
+                                    adapter.notifyDataSetChanged();
+                                    PlacesHandler.db.dodaj(place);
+                                } else {
+                                    Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
-                        PlacesHandler.db.dodaj(place);
-                        adapter.notifyDataSetChanged();
+
                         dialog.dismiss();
                     }
                 });

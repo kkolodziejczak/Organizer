@@ -48,4 +48,12 @@ public class PlacesHandler {
         if(Places != null)
             Places.clear();
     }
+    public static boolean isAlreadyAdded(String name){
+        for (Place p:Places) {
+            if(p.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

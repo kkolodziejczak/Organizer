@@ -507,12 +507,16 @@ public class ShortestPathActivity extends Fragment
     }
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getContext(), "Place added", Toast.LENGTH_SHORT).show();
-        String czas = "0:00";
-        Place pl = new Place(marker.getTitle().trim(), marker.getTitle(), czas);
-        PlacesHandler.addPlace(pl);
-        PlacesHandler.db.dodaj(pl);
-        PlacesHandler.getAdapter().notifyDataSetChanged();
+        if(!PlacesHandler.isAlreadyAdded(marker.getTitle().trim())) {
+            Toast.makeText(getContext(), "Place added", Toast.LENGTH_SHORT).show();
+            String czas = "0:00";
+            Place pl = new Place(marker.getTitle().trim(), marker.getTitle(), czas);
+            PlacesHandler.addPlace(pl);
+            PlacesHandler.db.dodaj(pl);
+            PlacesHandler.getAdapter().notifyDataSetChanged();
+        }else {
+            Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
