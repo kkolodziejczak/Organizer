@@ -404,6 +404,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                     .execute();
             List<Event> items = events.getItems();
 
+            EventList.Clear();
             for (Event event : items) {
                 DateTime start = event.getStart().getDateTime();
                 if (start == null)
