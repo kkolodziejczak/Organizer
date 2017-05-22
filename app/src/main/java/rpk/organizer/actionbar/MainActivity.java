@@ -86,9 +86,6 @@ public class MainActivity extends AppCompatActivity {
             selectedFragmentClass = null;
         } else {    // jezeli jednak cos jest na stosie i kliknelismy na ktorakolwiek z opcji w actionbar
                     // to nalezy usunac wszystkie fragmenty ze stosu i dodac nowy
-            for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-                fragmentManager.popBackStack();
-            }
         }
         switch (item.getItemId()) {
             case R.id.mapAction:
@@ -114,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
         }
         // bedac np. na mapie nie mozemy przeladowac fragmentu map itd.
         if (selectedFragmentClass != fragmentClass) {
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+                    fragmentManager.popBackStack();
+                }
+            }
             //getSupportFragmentManager().popBackStack();
             // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
             // naciskania przycisku Back w celu opuszczenia aplikacji
