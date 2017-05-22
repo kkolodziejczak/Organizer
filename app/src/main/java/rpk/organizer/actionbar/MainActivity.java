@@ -84,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
         // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
         if (fragmentManager.getBackStackEntryCount() == 0) {
             selectedFragmentClass = null;
+        } else {    // jezeli jednak cos jest na stosie i kliknelismy na ktorakolwiek z opcji w actionbar
+                    // to nalezy usunac wszystkie fragmenty ze stosu i dodac nowy
+            for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+                fragmentManager.popBackStack();
+            }
         }
         switch (item.getItemId()) {
             case R.id.mapAction:
@@ -109,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // bedac np. na mapie nie mozemy przeladowac fragmentu map itd.
         if (selectedFragmentClass != fragmentClass) {
-            getSupportFragmentManager().popBackStack();
+            //getSupportFragmentManager().popBackStack();
             // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
             // naciskania przycisku Back w celu opuszczenia aplikacji
             if (fragmentClass != Default.class) {
