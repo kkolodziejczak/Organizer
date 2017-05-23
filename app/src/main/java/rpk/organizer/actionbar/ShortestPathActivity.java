@@ -103,7 +103,7 @@ public class ShortestPathActivity extends Fragment
     private static final String LOG_TAG = "ShortestPathActivity";
     private GoogleApiClient mGoogleApiClient;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
-            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
+            new LatLng(48.77791275550184, 15.09521484375), new LatLng(55.02802211299252, 23.5107421875));
 
     @Nullable
     @Override
@@ -149,16 +149,14 @@ public class ShortestPathActivity extends Fragment
         etDestination.setOnItemClickListener(mAutocompleteClickListener);
         etDestination.setAdapter(mPlaceArrayAdapter);
 
+        // po nacisnieciu guzika od wyznaczenia trasy schowaj klawiature
         Button btnFindPath = (Button) view.findViewById(R.id.btnFindPath);
         btnFindPath.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick (View view) {
                 sendRequest();
                 // Chowanie klawiatury
-                InputMethodManager inputManager = (InputMethodManager)
-                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
-                        InputMethodManager.HIDE_NOT_ALWAYS);
+                MainActivity.hideKeyboard(getActivity());
             }
         });
         Bundle arg = getArguments();
@@ -243,8 +241,8 @@ public class ShortestPathActivity extends Fragment
 
     @Override
     public void onPause() {
-        assistant.stop();
         super.onPause();
+        assistant.stop();
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.stopAutoManage(getActivity());
             mGoogleApiClient.disconnect();
