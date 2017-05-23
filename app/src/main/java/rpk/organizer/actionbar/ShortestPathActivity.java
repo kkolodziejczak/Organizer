@@ -329,7 +329,7 @@ public class ShortestPathActivity extends Fragment
     }
 
 
-    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+    public String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         try {
@@ -461,11 +461,14 @@ public class ShortestPathActivity extends Fragment
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         if (routes.size() == 0)
             return;
+        String rt = "";
+        int c = 0;
         for (Route route : routes) {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
             ((TextView) getView().findViewById(R.id.tvDuration)).setText(route.duration.text);
             ((TextView) getView().findViewById(R.id.tvDistance)).setText(route.distance.text);
-
+            rt = route.distance.text;
+            Log.d("distance", String.valueOf(c++));
             originMarkers.add(mMap.addMarker(new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
                     .title(route.startAddress)
@@ -486,6 +489,7 @@ public class ShortestPathActivity extends Fragment
             }
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
+
         LatLngBounds bounds = builder.build();
 
         int width = getResources().getDisplayMetrics().widthPixels;
