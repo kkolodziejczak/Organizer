@@ -1,5 +1,7 @@
 package rpk.organizer.actionbar;
 
+import android.app.Activity;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.util.ExponentialBackOff;
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // bedac np. na mapie nie mozemy przeladowac fragmentu map itd.
         if (selectedFragmentClass != fragmentClass) {
+            hideKeyboard(this); // jezeli na poprzednim fragmencie byla wlaczona klawiatura, to ja chowamy
             if (fragmentManager.getBackStackEntryCount() > 0) {
                 for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
                     fragmentManager.popBackStack();
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //getSupportFragmentManager().popBackStack();
             // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
-            // naciskania przycisku Back w celu opuszczenia aplikacji
+            // naciskania przycisku back w celu opuszczenia aplikacji
             if (fragmentClass != Default.class) {
                 fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
             }
@@ -193,5 +198,16 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragmentClass = fragmentManager.getBackStackEntryAt(0).getClass();
         }
 
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
