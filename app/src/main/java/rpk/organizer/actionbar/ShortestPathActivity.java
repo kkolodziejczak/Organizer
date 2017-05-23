@@ -30,16 +30,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -88,7 +85,8 @@ public class ShortestPathActivity extends Fragment
     private SupportMapFragment map;
     private GoogleMap mMap;
 
-    private Marker myPostionmarker;
+    private Marker myPositionMarker;
+    private Marker myNewMarker;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
     private List<Polyline> polylinePaths = new ArrayList<>();
@@ -367,12 +365,12 @@ public class ShortestPathActivity extends Fragment
             ///mMap.clear();
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
             MarkerOptions markerOptions = new MarkerOptions().position(myPosition).title(geolocation);
-            if(myPostionmarker == null){
-                myPostionmarker = mMap.addMarker(markerOptions);
+            if(myPositionMarker == null){
+                myPositionMarker = mMap.addMarker(markerOptions);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myPosition, 16));
             }
             else {
-                myPostionmarker.setPosition(myPosition);
+                myPositionMarker.setPosition(myPosition);
             }
 
         }
@@ -396,35 +394,27 @@ public class ShortestPathActivity extends Fragment
 
             @Override
             public void onMapLongClick(LatLng latLng) {
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+                if(myNewMarker == null){
+                    myNewMarker = mMap.addMarker(markerOptions);
+                }
+                else {
+                    myNewMarker.setPosition(latLng);
+                }
 
-                // Creating a marker
-                MarkerOptions markerOptions = new MarkerOptions();
-
-                // Setting the position for the marker
-                markerOptions.position(latLng);
-
-                // Setting the title for the marker.
-                // This will be displayed on taping the marker
-                //markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-
-                // Clears the previously touched position
-                mMap.clear();
-
-                // Animating to the touched position
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
-                // Placing a marker on the touched position
-                Marker marker = mMap.addMarker(markerOptions);
                 String s = getCompleteAddressString(latLng.latitude, latLng.longitude);
                 String lines[] = s.split("\\r?\\n");
-                String ss = "";
+                String fullAddress = "";
                 for (int i = 0; i < lines.length; i++) {
                     if (i > 0) {
-                        ss += ", ";
+                        fullAddress += ", ";
                     }
-                    ss += lines[i];
+                    fullAddress += lines[i];
                 }
-                marker.setTitle(ss);
+                myNewMarker.setTitle(fullAddress);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 1500, null);
             }
         });
     }
@@ -432,10 +422,10 @@ public class ShortestPathActivity extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Setting a click event handler for the map
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
+        mapEvents();
     }
 
     @Override
