@@ -1,13 +1,13 @@
 <resources>
     <string name="title_activity_maps">Mapy</string>
-    <string name="app_name">Organizer</string>
+    <string name="app_name">Time Guide</string>
     <string name="test1">Test1</string>
     <string name="test2">Test2</string>
     <string name="test3">Test3</string>
     <string name="test4">Test4</string>
     <string name="ReminderDefault">Brak</string>
     <string name="ReminderCustom">Custo</string>
-    <string name="CalendarString">Kalendarz :\u0020</string>
+    <string name="CalendarString">Calendar :\u0020</string>
     <string name="empty">--</string>
     <string name="ok">OK</string>
     <string name="cancel">Mmmmh, no</string>
