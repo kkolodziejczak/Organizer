@@ -406,16 +406,18 @@ public class ShortestPathActivity extends Fragment
                     myNewMarker.setPosition(latLng);
                 }
 
-                String s = getCompleteAddressString(latLng.latitude, latLng.longitude);
-                String lines[] = s.split("\\r?\\n");
-                String fullAddress = "";
-                for (int i = 0; i < lines.length; i++) {
-                    if (i > 0) {
-                        fullAddress += ", ";
+                if (MainActivity.isNetworkConnected(mContext)) {
+                    String s = getCompleteAddressString(latLng.latitude, latLng.longitude);
+                    String lines[] = s.split("\\r?\\n");
+                    String fullAddress = "";
+                    for (int i = 0; i < lines.length; i++) {
+                        if (i > 0) {
+                            fullAddress += ", ";
+                        }
+                        fullAddress += lines[i];
                     }
-                    fullAddress += lines[i];
+                    myNewMarker.setTitle(fullAddress);
                 }
-                myNewMarker.setTitle(fullAddress);
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 1500, null);
             }
         });
