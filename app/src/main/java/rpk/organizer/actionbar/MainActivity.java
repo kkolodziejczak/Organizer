@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 v.vibrate(1000);
 //                Toast.makeText(getApplicationContext(),
 //                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
-//                        Toast.LENGTH_SHORT
+//                        Toast.LENGTH_SHORT zmiana
 //                ).show();
 //
                  List<EventsInfo> list = Calendar.getTodaysEventList();
