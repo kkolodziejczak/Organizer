@@ -2,6 +2,8 @@ package rpk.organizer.actionbar;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.frame, frag).commit();
 //        LoadDataToClasses();
 
+    }
+
+    public static boolean isNetworkConnected(Context c) {
+        ConnectivityManager conManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conManager.getActiveNetworkInfo();
+        return ( netInfo != null && netInfo.isConnected() );
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
