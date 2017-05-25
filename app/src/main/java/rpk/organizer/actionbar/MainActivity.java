@@ -2,31 +2,34 @@ package rpk.organizer.actionbar;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
-import com.google.api.client.util.ExponentialBackOff;
-import com.google.api.services.calendar.CalendarScopes;
+import android.widget.Toast;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import rpk.organizer.actionbar.Calendar.Calendar;
-import rpk.organizer.actionbar.MyPlaces.Place;
+import rpk.organizer.actionbar.Calendar.EventsInfo;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.Utils.BazaDanych;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
     private int IsListCreated = 0;
+    private int TimeBetweenCalls = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +52,29 @@ public class MainActivity extends AppCompatActivity {
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 
+        Timer timer = new Timer ();
+        TimerTask hourlyTask = new TimerTask () {
+            @Override
+            public void run () {
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(1000);
+//                Toast.makeText(getApplicationContext(),
+//                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
+//                        Toast.LENGTH_SHORT
+//                ).show();
+//
+                 List<EventsInfo> list = Calendar.getTodaysEventList();
+            }
+        };
+
+// schedule the task to run starting now and then every hour...
+        timer.schedule (hourlyTask, 1, 1000*15);   // 1000*10*60 every 10 minut
+
+//            TimeBetweenCalls * 60 * 1000;
         if (AlarmReceiver.ringtone != null) {
             AlarmReceiver.ringtone.stop();
-//            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//            mNotifyMgr.cancelAll();
+            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            mNotifyMgr.cancelAll();
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
@@ -80,6 +103,37 @@ public class MainActivity extends AppCompatActivity {
 //        LoadDataToClasses();
 
     }
+
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        unregisterReceiver(theBroadcastReceiver);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        IntentFilter aIntentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);
+//        registerReceiver(theBroadcastReceiver, aIntentFilter);
+//    }
+//
+//    protected BroadcastReceiver theBroadcastReceiver = new BroadcastReceiver() {
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            if (null == intent) {
+//                return;
+//            }
+//            String astrAction = intent.getAction();
+//            if (Intent.ACTION_TIME_TICK.equals(astrAction)) {
+//                Toast.makeText(getApplicationContext(),
+//                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
+//                        Toast.LENGTH_SHORT
+//                ).show();
+//            }
+//        }
+//
+//    };
 
     public static boolean isNetworkConnected(Context c) {
         ConnectivityManager conManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
