@@ -357,7 +357,7 @@ public class ShortestPathActivity extends Fragment
         if (location == null) return;
         tvLocation.setOnClickListener(null);
         tvLocation.setText(location.getLongitude() + "; " + location.getLatitude());
-        if (assistant.getBestLocation() != null) {
+        if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
             // test {
             String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
             tvLocationAdress.setText(geolocation);
