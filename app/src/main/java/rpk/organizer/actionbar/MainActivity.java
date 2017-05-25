@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
     private int IsListCreated = 0;
+    public static boolean mapLoading = false;
     private int TimeBetweenCalls = 1;
 
     @Override
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run () {
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(1000);
+                //v.vibrate(1000);
 //                Toast.makeText(getApplicationContext(),
 //                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
 //                        Toast.LENGTH_SHORT
@@ -153,13 +154,16 @@ public class MainActivity extends AppCompatActivity {
         String tag = "MENU";
         Class fragmentClass;
         FragmentManager fragmentManager = getSupportFragmentManager();
-        // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
-        // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
+
+        // jezeli ladowana jest mapa nie podejmuj proby przechodzenia gdziekolwiek
+        if (mapLoading == true)
+            return false;
+
+        // bedac w menu ktore nie jest odkladane na stos, zaznaczamy, ze nie ma zadnego zaznaczonego fragmentu
         if (fragmentManager.getBackStackEntryCount() == 0) {
             selectedFragmentClass = null;
-        } else {    // jezeli jednak cos jest na stosie i kliknelismy na ktorakolwiek z opcji w actionbar
-                    // to nalezy usunac wszystkie fragmenty ze stosu i dodac nowy
         }
+
         switch (item.getItemId()) {
             case R.id.mapAction:
                 fragmentClass = ShortestPathActivity.class;

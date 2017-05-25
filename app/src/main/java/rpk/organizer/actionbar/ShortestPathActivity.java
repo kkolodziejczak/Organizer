@@ -113,7 +113,7 @@ public class ShortestPathActivity extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        MainActivity.mapLoading = true;
         assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
         assistant.setVerbose(true);
 
@@ -380,7 +380,7 @@ public class ShortestPathActivity extends Fragment
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+        //((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
     @Override
@@ -433,7 +433,7 @@ public class ShortestPathActivity extends Fragment
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
         mapEvents();
-
+        MainActivity.mapLoading = false;
     }
 
     @Override
