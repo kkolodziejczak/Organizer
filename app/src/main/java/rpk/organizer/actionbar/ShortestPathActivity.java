@@ -380,7 +380,6 @@ public class ShortestPathActivity extends Fragment
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
     @Override
@@ -433,7 +432,7 @@ public class ShortestPathActivity extends Fragment
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
         mapEvents();
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 
     @Override
