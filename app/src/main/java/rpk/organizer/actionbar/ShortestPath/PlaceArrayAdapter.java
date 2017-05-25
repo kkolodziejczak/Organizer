@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
+import rpk.organizer.actionbar.MainActivity;
+
 /**
  * Created by Radek on 21.05.2017.
  */
@@ -31,6 +33,7 @@ public class PlaceArrayAdapter
     private AutocompleteFilter mPlaceFilter;
     private LatLngBounds mBounds;
     private ArrayList<PlaceAutocomplete> mResultList;
+    private static Context mContext;
 
     /**
      * Constructor
@@ -43,6 +46,7 @@ public class PlaceArrayAdapter
     public PlaceArrayAdapter(Context context, int resource, LatLngBounds bounds,
                              AutocompleteFilter filter) {
         super(context, resource);
+        mContext = context;
         mBounds = bounds;
         mPlaceFilter = filter;
     }
@@ -66,7 +70,7 @@ public class PlaceArrayAdapter
     }
 
     private ArrayList<PlaceAutocomplete> getPredictions(CharSequence constraint) {
-        if (mGoogleApiClient != null) {
+        if (mGoogleApiClient != null && MainActivity.isNetworkConnected(mContext)) {
             Log.i(TAG, "Executing autocomplete query for: " + constraint);
             PendingResult<AutocompletePredictionBuffer> results =
                     Places.GeoDataApi
