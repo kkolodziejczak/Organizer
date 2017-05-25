@@ -373,6 +373,8 @@ public class ShortestPathActivity extends Fragment
                 myPositionMarker.setPosition(myPosition);
             }
 
+        } else {
+            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);

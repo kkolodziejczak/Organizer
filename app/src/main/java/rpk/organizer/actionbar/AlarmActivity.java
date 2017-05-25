@@ -39,9 +39,19 @@ public class AlarmActivity extends Fragment {
 
         mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
 
-        int ZaIleSecAlarm = 5;
+
+        // Pobieramy pierwsze zdarzenie z brzegu
+        // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
+        // ustawiamy powiadomienie kilka minut przed czasem wyjścia
+
+        // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
+
+        // Czas docelowy - Czas jazdy - czas na wyjście
+        int ZaIleSecAlarm = 1;
 
         mAlarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+(ZaIleSecAlarm*1000),mAlarmIntent);
+
+        mAlarmManager.cancel(mAlarmIntent);
 
         Toast.makeText(mContext, "Alarm Start! za "+ ZaIleSecAlarm, Toast.LENGTH_LONG).show();
 

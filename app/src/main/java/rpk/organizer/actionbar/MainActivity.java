@@ -1,6 +1,7 @@
 package rpk.organizer.actionbar;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -46,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
 
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
+
+        if (AlarmReceiver.ringtone != null) {
+            AlarmReceiver.ringtone.stop();
+//            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//            mNotifyMgr.cancelAll();
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);
