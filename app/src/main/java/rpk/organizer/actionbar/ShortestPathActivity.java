@@ -30,6 +30,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -112,6 +113,7 @@ public class ShortestPathActivity extends Fragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
         assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
         assistant.setVerbose(true);
 
@@ -378,6 +380,7 @@ public class ShortestPathActivity extends Fragment
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
 
     @Override
@@ -430,6 +433,7 @@ public class ShortestPathActivity extends Fragment
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
         mapEvents();
+
     }
 
     @Override
