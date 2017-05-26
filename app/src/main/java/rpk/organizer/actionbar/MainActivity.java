@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(1000);
+                //v.vibrate(1000);
 //                Toast.makeText(getApplicationContext(),
 //                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
 //                        Toast.LENGTH_SHORT zmiana
