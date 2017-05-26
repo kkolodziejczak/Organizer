@@ -2,8 +2,10 @@ package rpk.organizer.actionbar;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -15,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,32 +26,40 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
+import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
+import rpk.organizer.actionbar.ShortestPath.Route;
 import rpk.organizer.actionbar.Utils.BlockClickFlag;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 
 public class MyPlacesActivity extends Fragment
-        implements AdapterView.OnItemClickListener, LocationAssistant.Listener {
+        implements AdapterView.OnItemClickListener, LocationAssistant.Listener, DirectionFinderListener {
 
     private LocationAssistant assistant;
     private ListView PlacesListView;
     private Context mContext;
     private FloatingActionButton fab;
     private PlacesAdapter adapter;
+    private ProgressDialog progressDialog;
     private int IsClickedFlag = 0;
 
     @Nullable
@@ -308,5 +319,20 @@ public class MyPlacesActivity extends Fragment
     public void onPause() {
         super.onPause();
         assistant.stop();
+    }
+
+    @Override
+    public void onDirectionFinderStart() {
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+        progressDialog.dismiss();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        if (routes.size() == 0)
+            return;
+        String duration = routes.get(0).duration.text;
+        String distance = routes.get(0).distance.text;
     }
 }
