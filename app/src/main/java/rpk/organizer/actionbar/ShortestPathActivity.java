@@ -174,6 +174,7 @@ public class ShortestPathActivity extends Fragment
             Toast.makeText(getContext(), msgStr, Toast.LENGTH_LONG).show();
             etDestination.setText(msgStr);
         }
+
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener
@@ -298,6 +299,7 @@ public class ShortestPathActivity extends Fragment
                     }
                 })
                 .show();
+        BlockClickFlag.setFlagTrue();
     }
 
     @Override
@@ -321,6 +323,7 @@ public class ShortestPathActivity extends Fragment
                     }
                 })
                 .show();
+        BlockClickFlag.setFlagTrue();
     }
 
     @Override
@@ -357,7 +360,10 @@ public class ShortestPathActivity extends Fragment
 
     @Override
     public void onNewLocationAvailable(Location location) {
-        if (location == null) return;
+        if (location == null) {
+            BlockClickFlag.setFlagTrue();
+            return;
+        }
         tvLocation.setOnClickListener(null);
         tvLocation.setText(location.getLongitude() + "; " + location.getLatitude());
         if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
@@ -383,6 +389,7 @@ public class ShortestPathActivity extends Fragment
         tvLocation.animate().alpha(0.5f).setDuration(400);
        // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         BlockClickFlag.setFlagTrue();
+
     }
 
     @Override
