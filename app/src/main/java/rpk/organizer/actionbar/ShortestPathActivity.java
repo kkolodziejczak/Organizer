@@ -423,7 +423,7 @@ public class ShortestPathActivity extends Fragment
                     }
                     myNewMarker.setTitle(fullAddress);
                 }
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 1500, null);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 800, null);
             }
         });
     }
