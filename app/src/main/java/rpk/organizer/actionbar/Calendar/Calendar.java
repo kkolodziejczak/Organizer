@@ -3,12 +3,17 @@ package rpk.organizer.actionbar.Calendar;
 import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -30,6 +35,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException;
@@ -52,12 +59,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import rpk.organizer.actionbar.AlarmReceiver;
 import rpk.organizer.actionbar.MainActivity;
 import rpk.organizer.actionbar.R;
+import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
+import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
+import rpk.organizer.actionbar.ShortestPath.Route;
 import rpk.organizer.actionbar.Utils.BlockClickFlag;
 import rpk.organizer.actionbar.Utils.DataUtils;
 import rpk.organizer.actionbar.Utils.EventList;
@@ -71,7 +82,11 @@ enum Task{
 }
 
 //Fragment
-public class Calendar extends Fragment implements EasyPermissions.PermissionCallbacks {
+public class Calendar extends Fragment
+        implements EasyPermissions.PermissionCallbacks, LocationAssistant.Listener, DirectionFinderListener {
+
+    private LocationAssistant assistant;
+    private ProgressDialog progressDialog;
     static public GoogleAccountCredential mCredential;
     ProgressDialog mProgress;
 
@@ -103,8 +118,27 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        assistant.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        assistant.stop();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
+        assistant.setVerbose(true);
         Bundle bundle = getArguments();
         mContext = getContext();
         EventListView = (ListView) getActivity().findViewById(R.id.EventList);
@@ -529,4 +563,123 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
             }
         }
     }
+    @Override
+    public void onNeedLocationPermission() {
+        assistant.requestAndPossiblyExplainLocationPermission();
+    }
+
+    @Override
+    public void onExplainLocationPermission() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permissionExplanation)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        assistant.requestLocationPermission();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onLocationPermissionPermanentlyDeclined(View.OnClickListener fromView,
+                                                        DialogInterface.OnClickListener fromDialog) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permissionPermanentlyDeclined)
+                .setPositiveButton(R.string.ok, fromDialog)
+                .show();
+    }
+
+    @Override
+    public void onNeedLocationSettingsChange() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.switchOnLocationShort)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        assistant.changeLocationSettings();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onFallBackToSystemSettings(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.switchOnLocationLong)
+                .setPositiveButton(R.string.ok, fromDialog)
+                .show();
+    }
+    public String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return strAdd;
+    }
+
+    @Override
+    public void onNewLocationAvailable(Location location) {
+        if (location == null) return;
+
+        if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
+            String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+
+            LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } else {
+            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+        }
+        BlockClickFlag.setFlagTrue();
+    }
+
+    @Override
+    public void onMockLocationsDetected(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
+//        tvLocation.setText(getString(R.string.mockLocationMessage));
+//        tvLocation.setOnClickListener(fromView);
+    }
+
+    @Override
+    public void onError(LocationAssistant.ErrorType type, String message) {
+//        tvLocation.setText(getString(R.string.error));
+    }
+
+    @Override
+    public void onDirectionFinderStart() {
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes) {
+        progressDialog.dismiss();
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        if (routes.size() == 0)
+            return;
+        String duration = routes.get(0).duration.text;
+        String distance = routes.get(0).distance.text;
+    }
+
 }
