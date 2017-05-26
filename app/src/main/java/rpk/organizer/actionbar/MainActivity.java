@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -34,6 +35,8 @@ import rpk.organizer.actionbar.Calendar.Calendar;
 import rpk.organizer.actionbar.Calendar.EventsInfo;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.Utils.BazaDanych;
+import rpk.organizer.actionbar.Utils.BlockClickFlag;
+import rpk.organizer.actionbar.Utils.GPSCheck;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private int IsListCreated = 0;
     private int TimeBetweenCalls = 1;
+    private GPSCheck reciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(), this);
         PlacesHandler.setAdapter(adapter);
         JodaTimeAndroid.init(this);
-
+        reciever = new GPSCheck();
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 
@@ -153,56 +157,62 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Fragment frag = null;
-        String tag = "MENU";
-        Class fragmentClass;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
-        // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
-        if (fragmentManager.getBackStackEntryCount() == 0) {
-            selectedFragmentClass = null;
-        } else {    // jezeli jednak cos jest na stosie i kliknelismy na ktorakolwiek z opcji w actionbar
-            // to nalezy usunac wszystkie fragmenty ze stosu i dodac nowy
-        }
-        switch (item.getItemId()) {
-            case R.id.mapAction:
-                fragmentClass = ShortestPathActivity.class;
-                tag = "SHORTEST_PATH";
-                break;
-            case R.id.calendarAction:
-                fragmentClass = Calendar.class;
-                tag = "CALENDAR";
-                break;
-            case R.id.myPlaceAction:
-                fragmentClass = MyPlacesActivity.class;
-                tag = "MY_PLACES";
-                break;
-            default:
-                fragmentClass = Default.class;
-                tag = "MENU";
-        }
-        try {
-            frag = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // bedac np. na mapie nie mozemy przeladowac fragmentu map itd.
-        if (selectedFragmentClass != fragmentClass) {
-            hideKeyboard(this); // jezeli na poprzednim fragmencie byla wlaczona klawiatura, to ja chowamy
-            if (fragmentManager.getBackStackEntryCount() > 0) {
-                for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
-                    fragmentManager.popBackStack();
+        if (BlockClickFlag.getFlag()) {
+            Fragment frag = null;
+            String tag = "MENU";
+            Class fragmentClass;
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
+            // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
+            // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
+            if (fragmentManager.getBackStackEntryCount() == 0) {
+                selectedFragmentClass = null;
+            } else {    // jezeli jednak cos jest na stosie i kliknelismy na ktorakolwiek z opcji w actionbar
+                // to nalezy usunac wszystkie fragmenty ze stosu i dodac nowy
+            }
+            switch (item.getItemId()) {
+                case R.id.mapAction:
+                    fragmentClass = ShortestPathActivity.class;
+                    tag = "SHORTEST_PATH";
+                    //this.getSupportActionBar().hide();
+                    break;
+                case R.id.calendarAction:
+                    fragmentClass = Calendar.class;
+                    tag = "CALENDAR";
+                    break;
+                case R.id.myPlaceAction:
+                    fragmentClass = MyPlacesActivity.class;
+                    tag = "MY_PLACES";
+                    break;
+                default:
+                    fragmentClass = Default.class;
+                    tag = "MENU";
+            }
+            try {
+                frag = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            // bedac np. na mapie nie mozemy przeladowac fragmentu map itd.
+            if (selectedFragmentClass != fragmentClass) {
+                BlockClickFlag.setFlagFalse();
+                hideKeyboard(this); // jezeli na poprzednim fragmencie byla wlaczona klawiatura, to ja chowamy
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+                        fragmentManager.popBackStack();
+                    }
+                }
+                //getSupportFragmentManager().popBackStack();
+                // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
+                // naciskania przycisku back w celu opuszczenia aplikacji
+                if (fragmentClass != Default.class) {
+                    fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
                 }
             }
-            //getSupportFragmentManager().popBackStack();
-            // jezeli jestesmy w menu to nie dodajemy do fragmentu menu, aby uniknac 2-krotnego
-            // naciskania przycisku back w celu opuszczenia aplikacji
-            if (fragmentClass != Default.class) {
-                fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
-            }
+            // po kazdym wyborze z ActionBar zapisz informacje o klasie fragmentu
+            selectedFragmentClass = fragmentClass;
+
         }
-        // po kazdym wyborze z ActionBar zapisz informacje o klasie fragmentu
-        selectedFragmentClass = fragmentClass;
         return false;
     }
 
@@ -259,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+        BlockClickFlag.setFlagTrue();
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
             super.onBackPressed();

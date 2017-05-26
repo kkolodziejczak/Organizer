@@ -72,6 +72,7 @@ import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
 import rpk.organizer.actionbar.ShortestPath.PlaceArrayAdapter;
 import rpk.organizer.actionbar.ShortestPath.Route;
+import rpk.organizer.actionbar.Utils.BlockClickFlag;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class ShortestPathActivity extends Fragment
@@ -107,13 +108,13 @@ public class ShortestPathActivity extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
         return inflater.inflate(R.layout.shortest_path, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
         assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
         assistant.setVerbose(true);
 
@@ -380,6 +381,8 @@ public class ShortestPathActivity extends Fragment
         }
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
+       // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        BlockClickFlag.setFlagTrue();
     }
 
     @Override
@@ -420,7 +423,7 @@ public class ShortestPathActivity extends Fragment
                     }
                     myNewMarker.setTitle(fullAddress);
                 }
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 1500, null);
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng), 800, null);
             }
         });
     }
@@ -432,7 +435,7 @@ public class ShortestPathActivity extends Fragment
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setOnInfoWindowClickListener(this);
         mapEvents();
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
     }
 
     @Override
