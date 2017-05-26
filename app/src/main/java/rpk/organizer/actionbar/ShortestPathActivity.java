@@ -108,7 +108,6 @@ public class ShortestPathActivity extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         return inflater.inflate(R.layout.shortest_path, container, false);
     }
 
