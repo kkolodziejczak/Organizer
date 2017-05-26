@@ -25,5 +25,8 @@ public class Place implements Serializable {
     public String getTime() {
         return Time;
     }
+    public void  setTime(String time){
+        Time=time;
+    }
     public String getPosition(){ return Position;}
 }
