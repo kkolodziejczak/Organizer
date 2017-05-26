@@ -130,7 +130,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi(Task.GetCalendars);
-        BlockClickFlag.flag=true;
+        BlockClickFlag.setFlagTrue();
     }
 
 

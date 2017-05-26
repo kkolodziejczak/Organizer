@@ -153,12 +153,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(BlockClickFlag.flag) {
+        if(BlockClickFlag.getFlag()) {
             Fragment frag = null;
             String tag = "MENU";
             Class fragmentClass;
             FragmentManager fragmentManager = getSupportFragmentManager();
             // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
+            // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
             // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
             if (fragmentManager.getBackStackEntryCount() == 0) {
                 selectedFragmentClass = null;
@@ -190,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
             }
             // bedac np. na mapie nie mozemy przeladowac fragmentu map itd.
             if (selectedFragmentClass != fragmentClass) {
+                BlockClickFlag.setFlagFalse();
                 hideKeyboard(this); // jezeli na poprzednim fragmencie byla wlaczona klawiatura, to ja chowamy
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
@@ -202,11 +204,10 @@ public class MainActivity extends AppCompatActivity {
                 if (fragmentClass != Default.class) {
                     fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack(tag).commit();
                 }
-
             }
             // po kazdym wyborze z ActionBar zapisz informacje o klasie fragmentu
             selectedFragmentClass = fragmentClass;
-            BlockClickFlag.flag=false;
+
         }
         return false;
     }
@@ -264,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        BlockClickFlag.flag=true;
+        BlockClickFlag.setFlagTrue();
         int count = getSupportFragmentManager().getBackStackEntryCount();
         if (count == 0) {
             super.onBackPressed();

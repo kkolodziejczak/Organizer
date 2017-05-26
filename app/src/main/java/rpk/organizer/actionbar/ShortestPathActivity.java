@@ -382,7 +382,7 @@ public class ShortestPathActivity extends Fragment
         tvLocation.setAlpha(1.0f);
         tvLocation.animate().alpha(0.5f).setDuration(400);
        // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
-        BlockClickFlag.flag=true;
+        BlockClickFlag.setFlagTrue();
     }
 
     @Override

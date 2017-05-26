@@ -120,7 +120,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                 dialog.show();
             }
         });
-        BlockClickFlag.flag=true;
+        BlockClickFlag.setFlagTrue();
         populate();
 
     }
