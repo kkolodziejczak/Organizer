@@ -29,7 +29,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     private Context mContext;
     private FloatingActionButton fab;
     private PlacesAdapter adapter;
-    private int IsClickedFlag=0;
+    private int IsClickedFlag = 0;
 
     @Nullable
     @Override
@@ -38,14 +38,15 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                 container, false);
         return view;
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
         mContext = getContext();
-        adapter = new PlacesAdapter(PlacesHandler.getPlaces(),mContext);
+        adapter = new PlacesAdapter(PlacesHandler.getPlaces(), mContext);
         PlacesHandler.setAdapter(adapter);
-        PlacesListView = (ListView)getActivity().findViewById(R.id.lista);
+        PlacesListView = (ListView) getActivity().findViewById(R.id.lista);
         PlacesListView.post(new Runnable() {
             @Override
             public void run() {
@@ -54,7 +55,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         });
         PlacesListView.setAdapter(adapter);
         PlacesListView.setOnItemClickListener(this);
-        fab = (FloatingActionButton)getActivity().findViewById(R.id.fapPlace);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.fapPlace);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,29 +80,27 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
                 dialogButtonOk.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        EditText edit=(EditText) dialog.findViewById(R.id.placeName);
-                        EditText edit2=(EditText) dialog.findViewById(R.id.etDestination);
-                        String czas ="0:00";
+                        EditText edit = (EditText) dialog.findViewById(R.id.placeName);
+                        EditText edit2 = (EditText) dialog.findViewById(R.id.etDestination);
+                        String czas = "0:00";
                         Place place;
-                        if(edit.getText().toString().isEmpty()) {
-                            if(edit2.getText().toString().isEmpty()){
+                        if (edit.getText().toString().isEmpty()) {
+                            if (edit2.getText().toString().isEmpty()) {
                                 Toast.makeText(getContext(), "Place can not be empty", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                if(!PlacesHandler.isAlreadyAdded(edit2.getText().toString())) {
+                            } else {
+                                if (!PlacesHandler.isAlreadyAdded(edit2.getText().toString())) {
                                     place = new Place(edit2.getText().toString(), edit2.getText().toString(), czas);
                                     PlacesHandler.addPlace(place);
                                     adapter.notifyDataSetChanged();
                                     PlacesHandler.db.dodaj(place);
-                                }else {
+                                } else {
                                     Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        }
-                        else{
-                            if(edit2.getText().toString().isEmpty()){
+                        } else {
+                            if (edit2.getText().toString().isEmpty()) {
                                 Toast.makeText(getContext(), "Place destination can not be empty", Toast.LENGTH_SHORT).show();
-                            }else {
+                            } else {
                                 if (PlacesHandler.isAlreadyAdded(edit.getText().toString())) {
                                     place = new Place(edit.getText().toString(), edit2.getText().toString(), czas);
                                     PlacesHandler.addPlace(place);
@@ -126,20 +125,20 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onStart() {
         super.onStart();
-        IsClickedFlag=0;
+        IsClickedFlag = 0;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        IsClickedFlag=0;
+        IsClickedFlag = 0;
     }
 
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-        if(IsClickedFlag==0) {
+        if (IsClickedFlag == 0) {
 
             String place = PlacesHandler.getPlace((int) id).getPosition();
-            MainActivity.AddNewFragmentOnTop(ShortestPathActivity.class,"SHORTEST_PATH",place);
+            MainActivity.AddNewFragmentOnTop(ShortestPathActivity.class, "SHORTEST_PATH", place);
 //            final FragmentTransaction ft = getFragmentManager().beginTransaction();
 //            Class frag = ShortestPathActivity.class;
 //            Fragment fragment;
@@ -159,7 +158,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
 //                e.printStackTrace();
 //            }
         }
-        IsClickedFlag=1;
+        IsClickedFlag = 1;
         //Log.i("HelloListView", "You clicked Item: " + id + " at position:" + position);
         // Then you start a new Activity via Intent
         //Intent intent = new Intent();
@@ -169,6 +168,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
         //intent.putExtra("id", id);
         //startActivity(intent);
     }
+
     public void populate() {
 
     }

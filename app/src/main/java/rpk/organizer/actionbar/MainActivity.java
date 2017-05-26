@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
     private int IsListCreated = 0;
-    public static boolean mapLoading = false;
     private int TimeBetweenCalls = 1;
 
     @Override
@@ -53,23 +52,23 @@ public class MainActivity extends AppCompatActivity {
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 
-        Timer timer = new Timer ();
-        TimerTask hourlyTask = new TimerTask () {
+        Timer timer = new Timer();
+        TimerTask hourlyTask = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                //v.vibrate(1000);
+                v.vibrate(1000);
 //                Toast.makeText(getApplicationContext(),
 //                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
-//                        Toast.LENGTH_SHORT
+//                        Toast.LENGTH_SHORT zmiana
 //                ).show();
 //
-                 List<EventsInfo> list = Calendar.getTodaysEventList();
+                List<EventsInfo> list = Calendar.getTodaysEventList();
             }
         };
 
 // schedule the task to run starting now and then every hour...
-        timer.schedule (hourlyTask, 1, 1000*15);   // 1000*10*60 every 10 minut
+        timer.schedule(hourlyTask, 1, 1000 * 15);   // 1000*10*60 every 10 minut
 
 //            TimeBetweenCalls * 60 * 1000;
         if (AlarmReceiver.ringtone != null) {
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isNetworkConnected(Context c) {
         ConnectivityManager conManager = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conManager.getActiveNetworkInfo();
-        return ( netInfo != null && netInfo.isConnected() );
+        return (netInfo != null && netInfo.isConnected());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -154,16 +153,13 @@ public class MainActivity extends AppCompatActivity {
         String tag = "MENU";
         Class fragmentClass;
         FragmentManager fragmentManager = getSupportFragmentManager();
-
-        // jezeli ladowana jest mapa nie podejmuj proby przechodzenia gdziekolwiek
-        if (mapLoading == true)
-            return false;
-
-        // bedac w menu ktore nie jest odkladane na stos, zaznaczamy, ze nie ma zadnego zaznaczonego fragmentu
+        // jezeli nie mamy zadnych fragmentow odlozonych na stosie, oznacza to ze jestesmy w menu
+        // menu (poczatkowy ekran jak wlacza sie aplikacja) nie jest odkladane na stos fragmentow
         if (fragmentManager.getBackStackEntryCount() == 0) {
             selectedFragmentClass = null;
+        } else {    // jezeli jednak cos jest na stosie i kliknelismy na ktorakolwiek z opcji w actionbar
+            // to nalezy usunac wszystkie fragmenty ze stosu i dodac nowy
         }
-
         switch (item.getItemId()) {
             case R.id.mapAction:
                 fragmentClass = ShortestPathActivity.class;
@@ -190,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         if (selectedFragmentClass != fragmentClass) {
             hideKeyboard(this); // jezeli na poprzednim fragmencie byla wlaczona klawiatura, to ja chowamy
             if (fragmentManager.getBackStackEntryCount() > 0) {
-                for(int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
+                for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
                     fragmentManager.popBackStack();
                 }
             }
