@@ -1,7 +1,9 @@
 package rpk.organizer.actionbar;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
+    static public PendingIntent mAlarmIntent;
+
     private int IsListCreated = 0;
     private int TimeBetweenCalls = 1;
 
@@ -63,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 //                        Toast.LENGTH_SHORT zmiana
 //                ).show();
 //
-                List<EventsInfo> list = Calendar.getTodaysEventList();
+//                List<EventsInfo> list = Calendar.getTodaysEventList();
             }
         };
 
