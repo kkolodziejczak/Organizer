@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(), this);
         PlacesHandler.setAdapter(adapter);
         JodaTimeAndroid.init(this);
-        reciever= new GPSCheck();
+        reciever = new GPSCheck();
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(BlockClickFlag.getFlag()) {
+        if (BlockClickFlag.getFlag()) {
             Fragment frag = null;
             String tag = "MENU";
             Class fragmentClass;
