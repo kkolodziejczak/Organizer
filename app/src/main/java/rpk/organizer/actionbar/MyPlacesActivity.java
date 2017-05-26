@@ -83,9 +83,9 @@ public class MyPlacesActivity extends Fragment
         Bundle bundle = getArguments();
         mContext = getContext();
         swipeLayout=(SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_container);
-        swipeLayout.setOnRefreshListener(this);
         adapter = new PlacesAdapter(PlacesHandler.getPlaces(), mContext);
         PlacesHandler.setAdapter(adapter);
+        swipeLayout.setOnRefreshListener(this);
         PlacesListView = (ListView) getActivity().findViewById(R.id.lista);
         PlacesListView.post(new Runnable() {
             @Override
@@ -352,6 +352,7 @@ public class MyPlacesActivity extends Fragment
         String duration = routes.get(0).duration.text;
         PlacesHandler.getPlace(element).setTime(duration);
         element++;
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -363,11 +364,12 @@ public class MyPlacesActivity extends Fragment
                 element=0;
                 for (Place pl:PlacesHandler.getPlaces()) {
                     sendRequest(pl.getPosition());
+                    adapter.notifyDataSetChanged();
                 }
                 adapter.notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
             }
         },5000);
-
+        adapter.notifyDataSetChanged();
     }
 }
