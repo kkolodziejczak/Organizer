@@ -2,7 +2,9 @@ package rpk.organizer.actionbar.Calendar;
 
 import android.Manifest;
 import android.accounts.AccountManager;
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -53,6 +55,7 @@ import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
+import rpk.organizer.actionbar.AlarmReceiver;
 import rpk.organizer.actionbar.MainActivity;
 import rpk.organizer.actionbar.R;
 import rpk.organizer.actionbar.Utils.BlockClickFlag;
@@ -460,6 +463,23 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 switch (task){
                     case GetFirstEvents:
                         EventsInfoList = EventList.getEvents();
+                        Toast.makeText(mContext, "Testujemy PostExecute FirstEvents",Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(mContext, AlarmReceiver.class);
+                        MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext,234324243,intent,0);
+                        AlarmManager mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+
+                        // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
+                        // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
+                        // ustawiamy powiadomienie kilka minut przed czasem wyjścia
+
+                        // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
+
+                        // Czas docelowy - Czas jazdy - czas na wyjście
+                        int ZaIleSecAlarm = 5;
+
+                        mAlarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+(ZaIleSecAlarm*1000),MainActivity.mAlarmIntent);
+
                         getResultsFromApi(Task.GetEvents);
                         break;
                     case GetEvents:
@@ -481,7 +501,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
 
                         if(SelectedCalendar != null && SelectedCalendarPosition != -1)
                             mSpinner.setSelection(SelectedCalendarPosition);
-
+                        Toast.makeText(mContext, "Testujemy PostExecute",Toast.LENGTH_SHORT).show();
                         getResultsFromApi(Task.GetFirstEvents);
                         break;
                 }
