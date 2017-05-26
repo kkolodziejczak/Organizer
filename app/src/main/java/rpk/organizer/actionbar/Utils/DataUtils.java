@@ -5,6 +5,11 @@ import com.google.api.client.util.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import rpk.organizer.actionbar.Calendar.EventsInfo;
+
 public class DataUtils {
 
     static public String toHourMin(DateTime date, String separator){
@@ -21,5 +26,13 @@ public class DataUtils {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("E, dd MMMM yyyy");
         return fmt.print(dt);
 
+    }
+
+    public static List<Integer> toIntList(EventsInfo eventsInfo) {
+        String out2[] = eventsInfo.getTime().split(":");
+        List<Integer> times = new ArrayList<Integer>();
+        times.add(Integer.parseInt(out2[0]));
+        times.add(Integer.parseInt(out2[1]));
+        return times;
     }
 }

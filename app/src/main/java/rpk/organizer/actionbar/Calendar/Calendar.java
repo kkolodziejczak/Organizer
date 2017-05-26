@@ -169,12 +169,15 @@ public class Calendar extends Fragment
 
         getResultsFromApi(Task.GetCalendars);
         BlockClickFlag.setFlagTrue();
+        progressDialog = ProgressDialog.show(getContext(), "Please wait.",
+                "Finding direction..!", true);
     }
 
 
-    private void sendRequest() {
-        String origin = "";
-        String destination = "";
+    private void sendRequest(String dest) {
+        Location location = assistant.getBestLocation();
+        String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude()); // pobiera aktualną pozycję
+        String destination = dest; // Koniec
         try {
             new DirectionFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
@@ -330,21 +333,6 @@ public class Calendar extends Fragment
     @Override
     public void onPermissionsDenied(int requestCode, List<String> list) {
         // Do nothing.
-    }
-
-    /**
-     * Checks whether the device currently has a network connection.
-     *
-     * @return true if the device has a network connection, false otherwise.
-     */
-    private boolean isDeviceOnline() {
-        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        if(connMgr != null){
-            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-            return (networkInfo != null && networkInfo.isConnected());
-        }
-        return false;
     }
 
     /**
@@ -510,20 +498,7 @@ public class Calendar extends Fragment
                         EventsInfoList = EventList.getEvents();
                         Toast.makeText(mContext, "Testujemy PostExecute FirstEvents",Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(mContext, AlarmReceiver.class);
-                        MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext,234324243,intent,0);
-                        AlarmManager mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
-
-                        // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
-                        // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
-                        // ustawiamy powiadomienie kilka minut przed czasem wyjścia
-
-                        // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
-
-                        // Czas docelowy - Czas jazdy - czas na wyjście
-                        int ZaIleSecAlarm = 5;
-
-                        mAlarmManager.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+(ZaIleSecAlarm*1000),MainActivity.mAlarmIntent);
+                        sendRequest(EventsInfoList.get(0).getPlace());
 
                         getResultsFromApi(Task.GetEvents);
                         break;
@@ -555,23 +530,7 @@ public class Calendar extends Fragment
 
         @Override
         protected void onCancelled() {
-//            mProgress.hide();
-            if (mLastError != null) {
-//                if (mLastError instanceof GooglePlayServicesAvailabilityIOException) {
-//                    showGooglePlayServicesAvailabilityErrorDialog(
-//                            ((GooglePlayServicesAvailabilityIOException) mLastError)
-//                                    .getConnectionStatusCode());
-//                } else if (mLastError instanceof UserRecoverableAuthIOException) {
-//                    startActivityForResult(
-//                            ((UserRecoverableAuthIOException) mLastError).getIntent(),
-//                            Calendar.REQUEST_AUTHORIZATION);
-//                } else {
-////                    mOutputText.setText("The following error occurred:\n"
-////                            + mLastError.getMessage());
-//                }
-            } else {
-//                mOutputText.setText("Request cancelled.");
-            }
+
         }
     }
     @Override
@@ -686,11 +645,37 @@ public class Calendar extends Fragment
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
         progressDialog.dismiss();
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        if (routes.size() == 0)
+        if (routes.size() == 0 || EventsInfoList.size() == 0)
             return;
-        String duration = routes.get(0).duration.text;
-        String distance = routes.get(0).distance.text;
+
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext,234324243,intent,0);
+        AlarmManager mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+
+        // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
+        List<Integer> time = DataUtils.toIntList(EventsInfoList.get(0));
+
+        // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
+        int duration = routes.get(0).duration.value;
+
+        int bufforMin = 10;
+        int bufforHour = 0;
+
+        int hours = time.get(0) - duration/(60*60) - bufforHour;
+        int minutes =  time.get(1) - duration/60 - bufforMin;
+
+        // ustawiamy powiadomienie kilka minut przed czasem wyjścia
+        long AktualnyCzas = System.currentTimeMillis();
+//TODO: TUTAJ
+        long hourss =  AktualnyCzas / (60*60*1000) - hours;
+        long minutess =  AktualnyCzas / 60*1000 - minutes;
+
+        // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
+        Toast.makeText(mContext,"Nie zdążysz! zamów taksówkę.", Toast.LENGTH_LONG).show();
+
+        long ZaIlePowiadomienie = AktualnyCzas + hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+
+        mAlarmManager.set(AlarmManager.RTC_WAKEUP, ZaIlePowiadomienie, MainActivity.mAlarmIntent);
     }
 
 }

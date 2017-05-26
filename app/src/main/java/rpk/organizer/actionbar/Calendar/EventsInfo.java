@@ -30,4 +30,8 @@ public class EventsInfo {
     public String getInfo() {
         return what;
     }
+
+    public String getPlace() {
+        return where;
+    }
 }
