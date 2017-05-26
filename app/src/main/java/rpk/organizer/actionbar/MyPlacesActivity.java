@@ -359,6 +359,7 @@ public class MyPlacesActivity extends Fragment
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {
+                assistant.getBestLocation();
                 element=0;
                 for (Place pl:PlacesHandler.getPlaces()) {
                     sendRequest(pl.getPosition());
