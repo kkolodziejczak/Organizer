@@ -1,7 +1,12 @@
 package rpk.organizer.actionbar;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -20,13 +25,26 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.List;
+import java.util.Locale;
+
 import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
+import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
 import rpk.organizer.actionbar.Utils.BlockClickFlag;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 
-public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClickListener {
+public class MyPlacesActivity extends Fragment
+        implements AdapterView.OnItemClickListener, LocationAssistant.Listener {
+
+    private LocationAssistant assistant;
     private ListView PlacesListView;
     private Context mContext;
     private FloatingActionButton fab;
@@ -44,6 +62,8 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
+        assistant.setVerbose(true);
         Bundle bundle = getArguments();
         mContext = getContext();
         adapter = new PlacesAdapter(PlacesHandler.getPlaces(), mContext);
@@ -134,6 +154,7 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
     @Override
     public void onResume() {
         super.onResume();
+        assistant.start();
         IsClickedFlag = 0;
     }
 
@@ -175,5 +196,117 @@ public class MyPlacesActivity extends Fragment implements AdapterView.OnItemClic
 
     public void populate() {
 
+    }
+
+    @Override
+    public void onNeedLocationPermission() {
+        assistant.requestAndPossiblyExplainLocationPermission();
+    }
+
+    @Override
+    public void onExplainLocationPermission() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permissionExplanation)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        assistant.requestLocationPermission();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onLocationPermissionPermanentlyDeclined(View.OnClickListener fromView,
+                                                        DialogInterface.OnClickListener fromDialog) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.permissionPermanentlyDeclined)
+                .setPositiveButton(R.string.ok, fromDialog)
+                .show();
+    }
+
+    @Override
+    public void onNeedLocationSettingsChange() {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.switchOnLocationShort)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        assistant.changeLocationSettings();
+                    }
+                })
+                .show();
+    }
+
+    @Override
+    public void onFallBackToSystemSettings(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage(R.string.switchOnLocationLong)
+                .setPositiveButton(R.string.ok, fromDialog)
+                .show();
+    }
+
+
+    public String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return strAdd;
+    }
+
+    @Override
+    public void onNewLocationAvailable(Location location) {
+        if (location == null) return;
+
+        if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
+            String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+
+            LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
+
+        } else {
+            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+        }
+        BlockClickFlag.setFlagTrue();
+    }
+
+    @Override
+    public void onMockLocationsDetected(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
+//        tvLocation.setText(getString(R.string.mockLocationMessage));
+//        tvLocation.setOnClickListener(fromView);
+    }
+
+    @Override
+    public void onError(LocationAssistant.ErrorType type, String message) {
+//        tvLocation.setText(getString(R.string.error));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        assistant.stop();
     }
 }

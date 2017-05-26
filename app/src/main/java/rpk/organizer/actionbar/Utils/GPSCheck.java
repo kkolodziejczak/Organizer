@@ -20,7 +20,7 @@ public class GPSCheck extends BroadcastReceiver {
         }else {
             //gps off
             Toast.makeText(context, "OFF", Toast.LENGTH_LONG).show();
-
+            BlockClickFlag.setFlagTrue();
         }
     }
 }
