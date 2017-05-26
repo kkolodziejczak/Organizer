@@ -364,12 +364,9 @@ public class MyPlacesActivity extends Fragment
                 element=0;
                 for (Place pl:PlacesHandler.getPlaces()) {
                     sendRequest(pl.getPosition());
-                    adapter.notifyDataSetChanged();
                 }
-                adapter.notifyDataSetChanged();
                 swipeLayout.setRefreshing(false);
             }
         },5000);
-        adapter.notifyDataSetChanged();
     }
 }
