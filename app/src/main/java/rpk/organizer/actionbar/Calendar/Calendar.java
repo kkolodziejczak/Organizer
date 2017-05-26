@@ -55,6 +55,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 import rpk.organizer.actionbar.MainActivity;
 import rpk.organizer.actionbar.R;
+import rpk.organizer.actionbar.Utils.BlockClickFlag;
 import rpk.organizer.actionbar.Utils.DataUtils;
 import rpk.organizer.actionbar.Utils.EventList;
 
@@ -94,6 +95,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
         return inflater.inflate(R.layout.activity_calendar, container, false);
     }
 
@@ -128,6 +130,7 @@ public class Calendar extends Fragment implements EasyPermissions.PermissionCall
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi(Task.GetCalendars);
+        BlockClickFlag.flag=true;
     }
 
 
