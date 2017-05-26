@@ -51,7 +51,7 @@ public class PlacesAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.place, null);
         }
         TextView placeName = (TextView)convertView.findViewById(R.id.Place);
-        placeName.setMaxLines(1);
+        placeName.setMaxLines(2);
         placeName.setText(wpis.getName());
 
         TextView time = (TextView)convertView.findViewById(R.id.Time);

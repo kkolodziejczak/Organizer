@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +56,7 @@ import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 
 public class MyPlacesActivity extends Fragment
-        implements AdapterView.OnItemClickListener, LocationAssistant.Listener, DirectionFinderListener {
+        implements AdapterView.OnItemClickListener, LocationAssistant.Listener, DirectionFinderListener, SwipeRefreshLayout.OnRefreshListener {
 
     private LocationAssistant assistant;
     private ListView PlacesListView;
@@ -63,7 +65,8 @@ public class MyPlacesActivity extends Fragment
     private PlacesAdapter adapter;
     private ProgressDialog progressDialog;
     private int IsClickedFlag = 0;
-
+    private SwipeRefreshLayout swipeLayout;
+    private int element;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,8 +82,10 @@ public class MyPlacesActivity extends Fragment
         assistant.setVerbose(true);
         Bundle bundle = getArguments();
         mContext = getContext();
+        swipeLayout=(SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_container);
         adapter = new PlacesAdapter(PlacesHandler.getPlaces(), mContext);
         PlacesHandler.setAdapter(adapter);
+        swipeLayout.setOnRefreshListener(this);
         PlacesListView = (ListView) getActivity().findViewById(R.id.lista);
         PlacesListView.post(new Runnable() {
             @Override
@@ -213,9 +218,10 @@ public class MyPlacesActivity extends Fragment
         //startActivity(intent);
     }
 
-    private void sendRequest() {
-        String origin = "";
-        String destination = "";
+    private void sendRequest(String dest) {
+        Location location = assistant.getBestLocation();
+        String origin = getCompleteAddressString(location.getLatitude(),location.getLongitude());
+        String destination = dest;
         try {
             new DirectionFinder(this, origin, destination).execute();
         } catch (UnsupportedEncodingException e) {
@@ -340,11 +346,30 @@ public class MyPlacesActivity extends Fragment
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes) {
-        progressDialog.dismiss();
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         if (routes.size() == 0)
             return;
         String duration = routes.get(0).duration.text;
-        String distance = routes.get(0).distance.text;
+        PlacesHandler.getPlace(element).setTime(duration);
+        element++;
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                assistant.getBestLocation();
+                element=0;
+                for (Place pl:PlacesHandler.getPlaces()) {
+                    sendRequest(pl.getPosition());
+                    adapter.notifyDataSetChanged();
+                }
+                adapter.notifyDataSetChanged();
+                swipeLayout.setRefreshing(false);
+            }
+        },5000);
+        adapter.notifyDataSetChanged();
     }
 }

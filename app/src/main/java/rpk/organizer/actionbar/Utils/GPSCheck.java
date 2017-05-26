@@ -16,10 +16,10 @@ public class GPSCheck extends BroadcastReceiver {
         LocationManager locationManager = (LocationManager)context.getSystemService(context.LOCATION_SERVICE);
         if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
             //gps on
-            Toast.makeText(context, "ON", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "ON", Toast.LENGTH_LONG).show();
         }else {
             //gps off
-            Toast.makeText(context, "OFF", Toast.LENGTH_LONG).show();
+            //Toast.makeText(context, "OFF", Toast.LENGTH_LONG).show();
             BlockClickFlag.setFlagTrue();
         }
     }
