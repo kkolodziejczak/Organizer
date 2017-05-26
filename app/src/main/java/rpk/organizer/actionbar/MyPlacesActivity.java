@@ -220,12 +220,14 @@ public class MyPlacesActivity extends Fragment
 
     private void sendRequest(String dest) {
         Location location = assistant.getBestLocation();
-        String origin = getCompleteAddressString(location.getLatitude(),location.getLongitude());
-        String destination = dest;
-        try {
-            new DirectionFinder(this, origin, destination).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
+            String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude());
+            String destination = dest;
+            try {
+                new DirectionFinder(this, origin, destination).execute();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -360,7 +362,6 @@ public class MyPlacesActivity extends Fragment
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {
-                assistant.getBestLocation();
                 element=0;
                 for (Place pl:PlacesHandler.getPlaces()) {
                     sendRequest(pl.getPosition());
