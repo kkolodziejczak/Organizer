@@ -169,6 +169,12 @@ public class MyPlacesActivity extends Fragment
         IsClickedFlag = 0;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        assistant.stop();
+    }
+
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
         if (IsClickedFlag == 0) {
 
@@ -313,12 +319,6 @@ public class MyPlacesActivity extends Fragment
     @Override
     public void onError(LocationAssistant.ErrorType type, String message) {
 //        tvLocation.setText(getString(R.string.error));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        assistant.stop();
     }
 
     @Override
