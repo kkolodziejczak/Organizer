@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import rpk.organizer.actionbar.Calendar.Calendar;
 import rpk.organizer.actionbar.Calendar.EventsInfo;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.Utils.BazaDanych;
+import rpk.organizer.actionbar.Utils.GPSCheck;
 import rpk.organizer.actionbar.Utils.PlacesHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     static public FragmentManager fragmentManager;
     private int IsListCreated = 0;
     private int TimeBetweenCalls = 1;
+    private GPSCheck reciever;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         PlacesAdapter adapter = new PlacesAdapter(PlacesHandler.getPlaces(), this);
         PlacesHandler.setAdapter(adapter);
         JodaTimeAndroid.init(this);
-
+        reciever= new GPSCheck();
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 

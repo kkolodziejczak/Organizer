@@ -14,6 +14,7 @@
     <!-- do map i gps -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_GPS"/>
 
      <!--do kalendarza -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -48,6 +49,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <receiver android:name="AlarmReceiver"/>
+
+        <receiver android:name=".Utils.GPSCheck" >
+            <intent-filter>
+                <action android:name="android.location.PROVIDERS_CHANGED" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
