@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -169,8 +171,6 @@ public class Calendar extends Fragment
 
         getResultsFromApi(Task.GetCalendars);
         BlockClickFlag.setFlagTrue();
-        progressDialog = ProgressDialog.show(getContext(), "Please wait.",
-                "Finding direction..!", true);
     }
 
 
@@ -639,7 +639,8 @@ public class Calendar extends Fragment
 
     @Override
     public void onDirectionFinderStart() {
-
+        progressDialog = ProgressDialog.show(getContext(), "Please wait.",
+                "Finding direction..!", true);
     }
 
     @Override
@@ -658,24 +659,35 @@ public class Calendar extends Fragment
         // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
         int duration = routes.get(0).duration.value;
 
-        int bufforMin = 10;
-        int bufforHour = 0;
+        long millisInDay = 60 * 60 * 24 * 1000;
+        long dateOnly = (new Date().getTime() / millisInDay) * millisInDay;
 
-        int hours = time.get(0) - duration/(60*60) - bufforHour;
-        int minutes =  time.get(1) - duration/60 - bufforMin;
+        // data aktualna (bez czasu), TRZEBA POTEM ZMIENIC ZEBY BRALO Z EVENTU, w formacie unix
+        long clearDateUnix = new Date(dateOnly).getTime() / 1000;
 
-        // ustawiamy powiadomienie kilka minut przed czasem wyjścia
-        long AktualnyCzas = System.currentTimeMillis();
-//TODO: TUTAJ
-        long hourss =  AktualnyCzas / (60*60*1000) - hours;
-        long minutess =  AktualnyCzas / 60*1000 - minutes;
+        // czas interesujacego nas eventu
+        long eventTimeUnix = clearDateUnix + time.get(0) * 3600 + time.get(1) * 60;
+
+
+
+        // ustawiamy powiadomienie kilka minut przed czasem wyjscia
+        long currentTimeUnix = System.currentTimeMillis() / 1000; // w sekundach
+
+        // czas bedacy "zapasem" jaki mamy dodatkowo, poza uwzglednionym czasem podrozy
+        int bufferTime = 900;
+
+        long diffTime = eventTimeUnix - currentTimeUnix - duration - bufferTime;
+
+
+        Log.d("AktualnyCzas", String.valueOf(currentTimeUnix));
+
 
         // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
         Toast.makeText(mContext,"Nie zdążysz! zamów taksówkę.", Toast.LENGTH_LONG).show();
 
-        long ZaIlePowiadomienie = AktualnyCzas + hours * 60 * 60 * 1000 + minutes * 60 * 1000;
+        long whenToNotify = currentTimeUnix + diffTime;
 
-        mAlarmManager.set(AlarmManager.RTC_WAKEUP, ZaIlePowiadomienie, MainActivity.mAlarmIntent);
+        mAlarmManager.set(AlarmManager.RTC_WAKEUP, whenToNotify, MainActivity.mAlarmIntent);
     }
 
 }
