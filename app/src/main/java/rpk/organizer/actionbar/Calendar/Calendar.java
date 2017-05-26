@@ -55,6 +55,7 @@ import com.google.api.services.calendar.model.Events;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -66,6 +67,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 import rpk.organizer.actionbar.AlarmReceiver;
 import rpk.organizer.actionbar.MainActivity;
 import rpk.organizer.actionbar.R;
+import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
 import rpk.organizer.actionbar.ShortestPath.Route;
@@ -170,6 +172,16 @@ public class Calendar extends Fragment
         BlockClickFlag.setFlagTrue();
     }
 
+
+    private void sendRequest() {
+        String origin = "";
+        String destination = "";
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static List<EventsInfo> getTodaysEventList(){
         if(EventsInfoList == null)

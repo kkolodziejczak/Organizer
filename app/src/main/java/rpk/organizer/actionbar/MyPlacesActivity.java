@@ -38,12 +38,14 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
+import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinderListener;
 import rpk.organizer.actionbar.ShortestPath.LocationAssistant;
 import rpk.organizer.actionbar.ShortestPath.Route;
@@ -209,6 +211,16 @@ public class MyPlacesActivity extends Fragment
         // Or / And
         //intent.putExtra("id", id);
         //startActivity(intent);
+    }
+
+    private void sendRequest() {
+        String origin = "";
+        String destination = "";
+        try {
+            new DirectionFinder(this, origin, destination).execute();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     public void populate() {
