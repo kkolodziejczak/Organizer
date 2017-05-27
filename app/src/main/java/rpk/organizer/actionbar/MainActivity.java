@@ -62,7 +62,20 @@ public class MainActivity extends AppCompatActivity {
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 
-
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null)
+            {
+                //Cry about not being clicked on
+            }
+            else if (extras.getBoolean("NotiClick"))
+            {
+                AlarmReceiver.ringtone.stop();
+                NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                mNotifyMgr.cancelAll();
+                mAlarmIntent = null;
+            }
+        }
 
 //        Timer timer = new Timer();
 //        TimerTask hourlyTask = new TimerTask() {

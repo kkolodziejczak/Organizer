@@ -627,7 +627,7 @@ public class Calendar extends Fragment
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
         } else {
-            Toast.makeText(mContext, "No network connection available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.NoConnectionAVB, Toast.LENGTH_SHORT).show();
         }
         BlockClickFlag.setFlagTrue();
     }
@@ -660,7 +660,9 @@ public class Calendar extends Fragment
             progressDialog.dismiss();
             return;
         }
-        for (int i = 0; i < 10000000; i++) ;
+        long j =0;
+        for (int i = 0; i < 10000000; i++)
+            j = j+j-j;
         progressDialog.dismiss();
 
         if (routes.size() == 0 || list.size() == 0)
@@ -699,9 +701,9 @@ public class Calendar extends Fragment
 
         // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
         if (diffTime < 0)
-            Toast.makeText(mContext, "Nie zdążysz! teleportuj się!", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, R.string.TooLateNoti, Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(mContext, "Dodano powiadomienie", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.AddedNoti, Toast.LENGTH_SHORT).show();
 
         long whenToNotify = currentTimeUnix + diffTime;
 

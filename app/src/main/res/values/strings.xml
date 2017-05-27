@@ -30,4 +30,7 @@
     <string name="dialog_title">NEW PLACE</string>
     <string name="dialog_del">Are you sure ?</string>
     <string name="NotificationTitle">Time Guide - Notification</string>
+    <string name="TooLateNoti">Nie zdążysz! teleportuj się!</string>
+    <string name="AddedNoti">Dodano powiadomienie</string>
+    <string name="NoConnectionAVB">No network connection available.</string>
 </resources>

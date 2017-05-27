@@ -34,20 +34,7 @@ public class AlarmActivity extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (savedInstanceState == null) {
-            Bundle extras = getActivity().getIntent().getExtras();
-            if(extras == null)
-            {
-                //Cry about not being clicked on
-            }
-            else if (extras.getBoolean("NotiClick"))
-            {
-                AlarmReceiver.ringtone.stop();
-                NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
-                mNotifyMgr.cancelAll();
-                mAlarmIntent = null;
-            }
-        }
+
         mContext = getActivity().getApplicationContext();
 
         Intent intent = new Intent(mContext, AlarmReceiver.class);

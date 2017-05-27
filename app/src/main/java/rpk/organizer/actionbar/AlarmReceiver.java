@@ -26,14 +26,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         v.vibrate(750);
         ringtone.play();
 
-        Intent intent2 = new Intent(context, AlarmActivity.class);
+        Intent intent2 = new Intent(context, MainActivity.class);
         intent2.putExtra("NotiClick",true);
 
         PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setContentTitle(context.getString(R.string.NotificationTitle))
                         .setContentText(EventList.getSummary())
                         .setContentIntent(pIntent);
