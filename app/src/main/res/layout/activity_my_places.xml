@@ -23,7 +23,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
         android:src="@drawable/ic_fapadd"
-        app:backgroundTint="@color/oczojebnyBlue"
+        app:backgroundTint="@color/blueBackground"
         app:layout_anchor="@+id/lista"
         app:layout_anchorGravity="bottom|right" />
 
