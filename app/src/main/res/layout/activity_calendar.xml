@@ -19,6 +19,7 @@
         android:layout_height="320dp"
         android:layout_below="@+id/CalendarNames"
         android:minHeight="150dp"
+        android:selectedWeekBackgroundColor="@color/colorPrimary"
         android:firstDayOfWeek="2"
         />
 
