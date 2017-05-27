@@ -660,7 +660,7 @@ public class Calendar extends Fragment
             progressDialog.dismiss();
             return;
         }
-        long j =0;
+        long j = 0;
         for (int i = 0; i < 10000000; i++)
             j = j+j-j;
         progressDialog.dismiss();
