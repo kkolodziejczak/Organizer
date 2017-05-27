@@ -501,7 +501,7 @@ public class Calendar extends Fragment
                 switch (task) {
                     case GetFirstEvents:
                         MainActivity.EventsInfoList = EventList.getEvents();
-
+                        EventList.setID(0);
                         sendRequest(MainActivity.EventsInfoList.get(0).getPlace(), MainActivity.EventsInfoList);
 
                         getResultsFromApi(Task.GetEvents);
@@ -656,6 +656,10 @@ public class Calendar extends Fragment
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
+        if (MainActivity.mAlarmIntent != null){
+            progressDialog.dismiss();
+            return;
+        }
         for (int i = 0; i < 10000000; i++) ;
         progressDialog.dismiss();
 
@@ -667,7 +671,7 @@ public class Calendar extends Fragment
         AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
-        List<Integer> time = DataUtils.toIntList(MainActivity.EventsInfoList.get(0));
+        List<Integer> time = DataUtils.toIntList(list.get(0));
 
         // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
         int duration = routes.get(0).duration.value;

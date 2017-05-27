@@ -1,6 +1,7 @@
 package rpk.organizer.actionbar;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +26,7 @@ public class AlarmActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_alarm,
                 container, false);
+
         return view;
     }
 
@@ -32,6 +34,20 @@ public class AlarmActivity extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (savedInstanceState == null) {
+            Bundle extras = getActivity().getIntent().getExtras();
+            if(extras == null)
+            {
+                //Cry about not being clicked on
+            }
+            else if (extras.getBoolean("NotiClick"))
+            {
+                AlarmReceiver.ringtone.stop();
+                NotificationManager mNotifyMgr = (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
+                mNotifyMgr.cancelAll();
+                mAlarmIntent = null;
+            }
+        }
         mContext = getActivity().getApplicationContext();
 
         Intent intent = new Intent(mContext, AlarmReceiver.class);

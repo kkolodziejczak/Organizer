@@ -12,11 +12,13 @@ import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
+import rpk.organizer.actionbar.Utils.EventList;
+
 public class AlarmReceiver extends BroadcastReceiver {
     static public Ringtone ringtone;
     @Override
     public void onReceive(final Context context, Intent intent) {
-        Toast.makeText(context, "Alarm! i od razu stop!", Toast.LENGTH_LONG).show();
+
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         ringtone = RingtoneManager.getRingtone(context, uri);
@@ -24,32 +26,24 @@ public class AlarmReceiver extends BroadcastReceiver {
         v.vibrate(750);
         ringtone.play();
 
+        Intent intent2 = new Intent(context, AlarmActivity.class);
+        intent2.putExtra("NotiClick",true);
+
+        PendingIntent pIntent = PendingIntent.getActivity(context, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
+                        .setContentTitle(context.getString(R.string.NotificationTitle))
+                        .setContentText(EventList.getSummary())
+                        .setContentIntent(pIntent);
 
-        Intent resultIntent = new Intent(context, MainActivity.class);
-// Because clicking the notification opens a new ("special") activity, there's
-// no need to create an artificial back stack.
-        PendingIntent resultPendingIntent =
-                PendingIntent.getActivity(
-                        context,
-                        0,
-                        resultIntent,
-                        PendingIntent.FLAG_CANCEL_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        // Sets an ID for the notification
         int mNotificationId = 1;
-// Gets an instance of the NotificationManager service
+
         NotificationManager mNotifyMgr =
                 (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-// Builds the notification and issues it.
+
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
-        //TODO tutaj jaki popup i jak klinie to stop!
-        //ringtone.stop();
     }
 
 }
