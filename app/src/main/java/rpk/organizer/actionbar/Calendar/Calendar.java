@@ -652,7 +652,7 @@ public class Calendar extends Fragment
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
-        for(int i =0;i < 500000;i++);
+        for(int i =0;i < 100000000;i++);
         progressDialog.dismiss();
 
         if (routes.size() == 0 || list.size() == 0)
@@ -691,7 +691,7 @@ public class Calendar extends Fragment
         Log.d("AktualnyCzas", String.valueOf(currentTimeUnix));
 
         // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
-        if(diffTime<0)
+        if(diffTime < 0)
             Toast.makeText(mContext,"Nie zdążysz! teleportuj się!", Toast.LENGTH_LONG).show();
         else
             Toast.makeText(mContext,"Dodano powiadomienie", Toast.LENGTH_SHORT).show();
