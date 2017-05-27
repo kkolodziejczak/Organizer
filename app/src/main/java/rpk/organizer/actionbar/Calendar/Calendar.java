@@ -645,7 +645,7 @@ public class Calendar extends Fragment
 
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(getContext(), "Please wait.",
+        progressDialog = ProgressDialog.show(mContext, "Please wait.",
                 "Finding direction..!", true);
     }
 
