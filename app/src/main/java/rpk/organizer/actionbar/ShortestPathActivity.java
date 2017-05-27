@@ -415,6 +415,7 @@ public class ShortestPathActivity extends Fragment
                 }
                 else {
                     myNewMarker.setPosition(latLng);
+                    myNewMarker.hideInfoWindow();
                 }
 
                 if (MainActivity.isNetworkConnected(mContext)) {
