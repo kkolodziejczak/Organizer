@@ -79,7 +79,7 @@ import rpk.organizer.actionbar.Utils.EventList;
 
 import static android.app.Activity.RESULT_OK;
 
-enum Task{
+enum Task {
     GetFirstEvents,
     GetEvents,
     GetCalendars
@@ -146,7 +146,7 @@ public class Calendar extends Fragment
         EventListView = (ListView) getActivity().findViewById(R.id.EventList);
         mCalendar = (CalendarView) getActivity().findViewById(R.id.Calendar);
 
-        if(Build.VERSION.SDK_INT==Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             mCalendar.setFirstDayOfWeek(java.util.Calendar.SUNDAY);
         }
         mSpinner = (Spinner) getActivity().findViewById(R.id.CalendarNames);
@@ -156,7 +156,7 @@ public class Calendar extends Fragment
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                timeToGet = new DateTime(year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z");
+                timeToGet = new DateTime(year + "-" + String.format("%02d", month + 1) + "-" + String.format("%02d", dayOfMonth) + "T00:00:00.000Z");
 //                Toast.makeText(getContext().getApplicationContext(), year+"-"+String.format("%02d", month+1)+"-"+String.format("%02d", dayOfMonth)+"T00:00:00.000Z", Toast.LENGTH_SHORT).show();
                 SelectedCalendar = (String) mSpinner.getSelectedItem();
                 SelectedCalendarPosition = mSpinner.getSelectedItemPosition();
@@ -174,7 +174,7 @@ public class Calendar extends Fragment
 
 
     private void sendRequest(String dest, List<EventsInfo> list) {
-        if(dest == null)
+        if (dest == null)
             return;
         Location location = assistant.getBestLocation();
         String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude()); // pobiera aktualną pozycję
@@ -187,8 +187,8 @@ public class Calendar extends Fragment
     }
 
 
-    public static List<EventsInfo> getTodaysEventList(){
-        if(MainActivity.EventsInfoList == null)
+    public static List<EventsInfo> getTodaysEventList() {
+        if (MainActivity.EventsInfoList == null)
             return null;
         return MainActivity.EventsInfoList;
     }
@@ -205,12 +205,13 @@ public class Calendar extends Fragment
             acquireGooglePlayServices();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
-        } else  if (!MainActivity.isNetworkConnected(mContext)) {
-            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+        } else if (!MainActivity.isNetworkConnected(mContext)) {
+            Toast.makeText(mContext, "No network connection available.", Toast.LENGTH_SHORT).show();
         } else {
             new MakeRequestTask(mCredential).execute(task);
         }
     }
+
     /**
      * Attempts to set the account used with the API credentials. If an account
      * name was previously saved it will use that one; otherwise an account
@@ -408,10 +409,10 @@ public class Calendar extends Fragment
          */
         @Override
         protected List<String> doInBackground(Task... params) {
-            if(params.length > 0)
+            if (params.length > 0)
                 try {
                     this.task = params[0];
-                    switch (params[0]){
+                    switch (params[0]) {
                         case GetFirstEvents:
                             return getDataFromApi();
                         case GetEvents:
@@ -454,39 +455,40 @@ public class Calendar extends Fragment
                 if (start == null)
                     start = event.getStart().getDate();
 
-                EventList.addEvent(new EventsInfo(event.getSummary(), DataUtils.toHourMin(start,":"),event.getLocation()));
+                EventList.addEvent(new EventsInfo(event.getSummary(), DataUtils.toHourMin(start, ":"), event.getLocation()));
                 EventList.addGoogleEvent(event);
                 eventStrings.add(
-                        String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start,":")));
+                        String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start, ":")));
             }
             MainActivity.EventsInfoList = EventList.getEvents();
             return eventStrings;
         }
 
-        private List<String> getCalendarListFromApi(){
+        private List<String> getCalendarListFromApi() {
             List<String> CalendarStrings = new ArrayList<String>();
 
             String pageToken = null;
-            try{
+            try {
                 do {
                     CalendarList calendarList = mService.calendarList().list().setPageToken(pageToken).execute();
                     List<CalendarListEntry> items = calendarList.getItems();
                     for (CalendarListEntry calendarListEntry : items) {
                         CalendarStrings.add(calendarListEntry.getSummary());
-                        CalendarNames.put(calendarListEntry.getSummary(),calendarListEntry.getId());
+                        CalendarNames.put(calendarListEntry.getSummary(), calendarListEntry.getId());
                     }
                     pageToken = calendarList.getNextPageToken();
                 } while (pageToken != null);
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
 
             return CalendarStrings;
         }
+
         @Override
         protected void onPreExecute() {
 //            mProgress.show();
-              EventList.Clear();
+            EventList.Clear();
         }
 
         @Override
@@ -496,7 +498,7 @@ public class Calendar extends Fragment
                 EventAdapter adapter = new EventAdapter(mContext, new ArrayList<EventsInfo>());
                 EventListView.setAdapter(adapter);
             } else {
-                switch (task){
+                switch (task) {
                     case GetFirstEvents:
                         MainActivity.EventsInfoList = EventList.getEvents();
 
@@ -512,16 +514,16 @@ public class Calendar extends Fragment
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 EventToDisplay = EventList.getEventAt(position);
-                                MainActivity.AddNewFragmentOnTop(EventInfo.class,"EVENTINFO");
+                                MainActivity.AddNewFragmentOnTop(EventInfo.class, "EVENTINFO");
                             }
                         });
                         break;
                     case GetCalendars:
-                        ArrayAdapter<String> gameKindArray= new ArrayAdapter<String>(mContext,android.R.layout.simple_spinner_item, output);
+                        ArrayAdapter<String> gameKindArray = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, output);
                         gameKindArray.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         mSpinner.setAdapter(gameKindArray);
 
-                        if(SelectedCalendar != null && SelectedCalendarPosition != -1)
+                        if (SelectedCalendar != null && SelectedCalendarPosition != -1)
                             mSpinner.setSelection(SelectedCalendarPosition);
 
                         getResultsFromApi(Task.GetFirstEvents);
@@ -535,6 +537,7 @@ public class Calendar extends Fragment
 
         }
     }
+
     @Override
     public void onNeedLocationPermission() {
         assistant.requestAndPossiblyExplainLocationPermission();
@@ -590,6 +593,7 @@ public class Calendar extends Fragment
                 .setPositiveButton(R.string.ok, fromDialog)
                 .show();
     }
+
     public String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
@@ -623,7 +627,7 @@ public class Calendar extends Fragment
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
         } else {
-            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "No network connection available.", Toast.LENGTH_SHORT).show();
         }
         BlockClickFlag.setFlagTrue();
     }
@@ -652,15 +656,15 @@ public class Calendar extends Fragment
 
     @Override
     public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
-        for(int i =0;i < 100000000;i++);
+        for (int i = 0; i < 10000000; i++) ;
         progressDialog.dismiss();
 
         if (routes.size() == 0 || list.size() == 0)
             return;
 
         Intent intent = new Intent(mContext, AlarmReceiver.class);
-        MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext,234324243,intent,0);
-        AlarmManager mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
+        MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext, 234324243, intent, 0);
+        AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
         List<Integer> time = DataUtils.toIntList(MainActivity.EventsInfoList.get(0));
@@ -678,7 +682,6 @@ public class Calendar extends Fragment
         long eventTimeUnix = clearDateUnix + time.get(0) * 3600 + time.get(1) * 60;
 
 
-
         // ustawiamy powiadomienie kilka minut przed czasem wyjscia
         long currentTimeUnix = System.currentTimeMillis() / 1000; // w sekundach
 
@@ -691,10 +694,10 @@ public class Calendar extends Fragment
         Log.d("AktualnyCzas", String.valueOf(currentTimeUnix));
 
         // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
-        if(diffTime < 0)
-            Toast.makeText(mContext,"Nie zdążysz! teleportuj się!", Toast.LENGTH_LONG).show();
+        if (diffTime < 0)
+            Toast.makeText(mContext, "Nie zdążysz! teleportuj się!", Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(mContext,"Dodano powiadomienie", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Dodano powiadomienie", Toast.LENGTH_SHORT).show();
 
         long whenToNotify = currentTimeUnix + diffTime;
 
