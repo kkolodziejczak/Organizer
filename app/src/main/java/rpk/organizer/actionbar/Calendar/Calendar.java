@@ -175,7 +175,7 @@ public class Calendar extends Fragment
 
 
     private void sendRequest(String dest) {
-        if(dest.length() == 0)
+        if(dest != null)
             return;
         Location location = assistant.getBestLocation();
         String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude()); // pobiera aktualną pozycję
