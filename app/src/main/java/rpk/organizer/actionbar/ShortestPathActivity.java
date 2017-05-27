@@ -65,6 +65,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import rpk.organizer.actionbar.Calendar.EventsInfo;
 import rpk.organizer.actionbar.MyPlaces.Place;
 import rpk.organizer.actionbar.MyPlaces.PlacesAdapter;
 import rpk.organizer.actionbar.ShortestPath.DirectionFinder;
@@ -516,6 +517,12 @@ public class ShortestPathActivity extends Fragment
         mMap.animateCamera(cu);
         isPathExisting = true;
     }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
+
+    }
+
     @Override
     public void onInfoWindowClick(Marker marker) {
         if(!PlacesHandler.isAlreadyAdded(marker.getTitle().trim())) {

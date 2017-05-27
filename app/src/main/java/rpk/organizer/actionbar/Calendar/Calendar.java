@@ -99,7 +99,6 @@ public class Calendar extends Fragment
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
     static final int REQUEST_PERMISSION_GET_ACCOUNTS = 1003;
 
-    private static List<EventsInfo> EventsInfoList = null;
     public static Event EventToDisplay = null;
     public static String SelectedCalendar = null;
     public static int SelectedCalendarPosition = -1;
@@ -174,23 +173,24 @@ public class Calendar extends Fragment
     }
 
 
-    private void sendRequest(String dest) {
+    private void sendRequest(String dest, List<EventsInfo> list) {
         if(dest == null)
             return;
         Location location = assistant.getBestLocation();
         String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude()); // pobiera aktualną pozycję
         String destination = dest; // Koniec
         try {
-            new DirectionFinder(this, origin, destination).execute();
+            new DirectionFinder(this, origin, destination, list).execute();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }
 
+
     public static List<EventsInfo> getTodaysEventList(){
-        if(EventsInfoList == null)
+        if(MainActivity.EventsInfoList == null)
             return null;
-        return EventsInfoList;
+        return MainActivity.EventsInfoList;
     }
 
     /**
@@ -459,6 +459,7 @@ public class Calendar extends Fragment
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start,":")));
             }
+            MainActivity.EventsInfoList = EventList.getEvents();
             return eventStrings;
         }
 
@@ -497,10 +498,9 @@ public class Calendar extends Fragment
             } else {
                 switch (task){
                     case GetFirstEvents:
-                        EventsInfoList = EventList.getEvents();
-                        Toast.makeText(mContext, "Testujemy PostExecute FirstEvents",Toast.LENGTH_SHORT).show();
+                        MainActivity.EventsInfoList = EventList.getEvents();
 
-                        sendRequest(EventsInfoList.get(0).getPlace());
+                        sendRequest(MainActivity.EventsInfoList.get(0).getPlace(), MainActivity.EventsInfoList);
 
                         getResultsFromApi(Task.GetEvents);
                         break;
@@ -523,7 +523,7 @@ public class Calendar extends Fragment
 
                         if(SelectedCalendar != null && SelectedCalendarPosition != -1)
                             mSpinner.setSelection(SelectedCalendarPosition);
-                        Toast.makeText(mContext, "Testujemy PostExecute",Toast.LENGTH_SHORT).show();
+
                         getResultsFromApi(Task.GetFirstEvents);
                         break;
                 }
@@ -646,9 +646,16 @@ public class Calendar extends Fragment
     }
 
     @Override
-    public void onDirectionFinderSuccess(List<Route> routes) {
+    public void onDirectionFinderSuccess(List<Route> route) {
+
+    }
+
+    @Override
+    public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
+        for(int i =0;i < 500000;i++);
         progressDialog.dismiss();
-        if (routes.size() == 0 || EventsInfoList.size() == 0)
+
+        if (routes.size() == 0 || list.size() == 0)
             return;
 
         Intent intent = new Intent(mContext, AlarmReceiver.class);
@@ -656,7 +663,7 @@ public class Calendar extends Fragment
         AlarmManager mAlarmManager = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
 
         // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
-        List<Integer> time = DataUtils.toIntList(EventsInfoList.get(0));
+        List<Integer> time = DataUtils.toIntList(MainActivity.EventsInfoList.get(0));
 
         // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
         int duration = routes.get(0).duration.value;
@@ -683,9 +690,11 @@ public class Calendar extends Fragment
 
         Log.d("AktualnyCzas", String.valueOf(currentTimeUnix));
 
-
         // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
-        Toast.makeText(mContext,"Nie zdążysz! zamów taksówkę.", Toast.LENGTH_LONG).show();
+        if(diffTime<0)
+            Toast.makeText(mContext,"Nie zdążysz! teleportuj się!", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(mContext,"Dodano powiadomienie", Toast.LENGTH_SHORT).show();
 
         long whenToNotify = currentTimeUnix + diffTime;
 

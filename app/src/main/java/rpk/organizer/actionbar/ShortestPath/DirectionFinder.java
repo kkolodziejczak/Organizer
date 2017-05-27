@@ -20,12 +20,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import rpk.organizer.actionbar.Calendar.Calendar;
+import rpk.organizer.actionbar.Calendar.EventsInfo;
+
 /**
  * Created by Mai Thanh Hiep on 4/3/2016.
  */
 public class DirectionFinder {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
     private static final String GOOGLE_API_KEY = "AIzaSyDg1F_GeSj1x4STUVyvwVHpQv2QsY_kQPQ";
+    private List<EventsInfo> List = null;
     private DirectionFinderListener listener;
     private String origin;
     private String destination;
@@ -34,6 +38,13 @@ public class DirectionFinder {
         this.listener = listener;
         this.origin = origin;
         this.destination = destination;
+    }
+
+    public DirectionFinder(DirectionFinderListener listener, String origin, String destination, List<EventsInfo> list) {
+        this.listener = listener;
+        this.origin = origin;
+        this.destination = destination;
+        this.List = list;
     }
 
     public void execute() throws UnsupportedEncodingException {
@@ -114,8 +125,10 @@ public class DirectionFinder {
 
             routes.add(route);
         }
-
-        listener.onDirectionFinderSuccess(routes);
+        if(List != null)
+            listener.onDirectionFinderSuccess(routes, List);
+        else
+            listener.onDirectionFinderSuccess(routes);
     }
 
     private List<LatLng> decodePolyLine(final String poly) {

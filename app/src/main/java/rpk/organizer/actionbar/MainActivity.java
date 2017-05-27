@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
     static public PendingIntent mAlarmIntent;
+    static public List<EventsInfo> EventsInfoList = null;
+
 
     private int IsListCreated = 0;
     private int TimeBetweenCalls = 1;
