@@ -62,30 +62,30 @@ public class MainActivity extends AppCompatActivity {
         BazaDanych db = new BazaDanych(this);
         PlacesHandler.db = db;
 
-        Timer timer = new Timer();
-        TimerTask hourlyTask = new TimerTask() {
-            @Override
-            public void run() {
-                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                //v.vibrate(1000);
-//                Toast.makeText(getApplicationContext(),
-//                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
-//                        Toast.LENGTH_SHORT zmiana
-//                ).show();
+
+
+//        Timer timer = new Timer();
+//        TimerTask hourlyTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+//                //v.vibrate(1000);
+////                Toast.makeText(getApplicationContext(),
+////                        "Minute:" + java.util.Calendar.getInstance().get(java.util.Calendar.MINUTE),
+////                        Toast.LENGTH_SHORT zmiana
+////                ).show();
+////
+////                List<EventsInfo> list = Calendar.getTodaysEventList();
+//            }
+//        };
 //
-//                List<EventsInfo> list = Calendar.getTodaysEventList();
-            }
-        };
-
-// schedule the task to run starting now and then every hour...
-        timer.schedule(hourlyTask, 1, 1000 * 15);   // 1000*10*60 every 10 minut
-
-//            TimeBetweenCalls * 60 * 1000;
-        if (AlarmReceiver.ringtone != null) {
-            AlarmReceiver.ringtone.stop();
-            NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            mNotifyMgr.cancelAll();
-        }
+//// schedule the task to run starting now and then every hour...
+//        timer.schedule(hourlyTask, 1, 1000 * 15);   // 1000*10*60 every 10 minut
+//
+////            TimeBetweenCalls * 60 * 1000;
+//        if (AlarmReceiver.ringtone != null) {
+//
+//        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar4);
         setSupportActionBar(toolbar);

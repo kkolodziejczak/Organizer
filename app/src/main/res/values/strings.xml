@@ -29,4 +29,5 @@
     <string name="dialog_start">Add your place to favourite places</string>
     <string name="dialog_title">NEW PLACE</string>
     <string name="dialog_del">Are you sure ?</string>
+    <string name="NotificationTitle">Time Guide - Notification</string>
 </resources>
