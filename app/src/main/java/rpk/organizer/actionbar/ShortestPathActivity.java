@@ -519,20 +519,20 @@ public class ShortestPathActivity extends Fragment
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
-        Log.i(LOG_TAG, "Google Places API connected.");
+        Log.i(LOG_TAG, getString(R.string.google_places_connected));
     }
 
     @Override
     public void onConnectionSuspended(int i) {
         mPlaceArrayAdapter.setGoogleApiClient(null);
-        Log.e(LOG_TAG, "Google Places API connection suspended.");
+        Log.e(LOG_TAG, getString(R.string.google_places_suspended));
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(LOG_TAG, "Google Places API connection failed with error code: "
-                + connectionResult.getErrorCode());
+//        Log.e(LOG_TAG, "Google Places API connection failed with error code: "
+//                + connectionResult.getErrorCode());
 
-        Toast.makeText(getContext(), "Google Places API connection failed with error code:" + connectionResult.getErrorCode(), Toast.LENGTH_LONG).show();
+//        Toast.makeText(getContext(), "Google Places API connection failed with error code:" + connectionResult.getErrorCode(), Toast.LENGTH_LONG).show();
     }
 }

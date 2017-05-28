@@ -41,4 +41,6 @@
     <string name="finding_direction_title">Please wait.</string>
     <string name="place_added">Place added</string>
     <string name="place_exists">Place already exists</string>
+    <string name="google_places_connected">Google Places API connected.</string>
+    <string name="google_places_suspended">Google Places API connection suspended.</string>
 </resources>
