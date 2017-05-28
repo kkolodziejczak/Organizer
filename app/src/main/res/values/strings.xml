@@ -10,7 +10,7 @@
     <string name="CalendarString">Calendar :\u0020</string>
     <string name="empty">--</string>
     <string name="ok">OK</string>
-    <string name="cancel">Mmmmh, no</string>
+    <string name="cancel">No</string>
     <string name="error">Error</string>
     <string name="permissionExplanation">Look, we really need your location because of maps&#8230;</string>
     <string name="switchOnLocationShort">Oops - you seem to have disabled location services at the moment. This app is

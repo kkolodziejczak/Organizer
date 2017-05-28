@@ -83,7 +83,6 @@ public class ShortestPathActivity extends Fragment
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks {
 
-    private TextView tvLocation;
     private TextView tvLocationAdress;
     private LocationAssistant assistant;
     private SupportMapFragment map;
@@ -118,9 +117,6 @@ public class ShortestPathActivity extends Fragment
         super.onViewCreated(view, savedInstanceState);
         assistant = new LocationAssistant(getActivity(), this, LocationAssistant.Accuracy.HIGH, 5000, false);
         assistant.setVerbose(true);
-
-        tvLocation = (TextView) view.findViewById(R.id.tvLocation);
-        tvLocation.setText(getString(R.string.empty));
 
         tvLocationAdress = (TextView) view.findViewById(R.id.tvLocationAdress);
         tvLocationAdress.setText("");
@@ -255,8 +251,7 @@ public class ShortestPathActivity extends Fragment
     @NonNull
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (assistant.onPermissionsUpdated(requestCode, grantResults))
-            tvLocation.setOnClickListener(null);
+//        if (assistant.onPermissionsUpdated(requestCode, grantResults))
     }
 
     @Override
@@ -266,13 +261,6 @@ public class ShortestPathActivity extends Fragment
 
     @Override
     public void onNeedLocationPermission() {
-        tvLocation.setText("Need\nPermission");
-        tvLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                assistant.requestLocationPermission();
-            }
-        });
         assistant.requestAndPossiblyExplainLocationPermission();
     }
 
@@ -291,12 +279,6 @@ public class ShortestPathActivity extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        tvLocation.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                assistant.requestLocationPermission();
-                            }
-                        });
                     }
                 })
                 .show();
@@ -365,8 +347,6 @@ public class ShortestPathActivity extends Fragment
             BlockClickFlag.setFlagTrue();
             return;
         }
-        tvLocation.setOnClickListener(null);
-        tvLocation.setText(location.getLongitude() + "; " + location.getLatitude());
         if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
             // test {
             String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
@@ -386,8 +366,6 @@ public class ShortestPathActivity extends Fragment
         } else {
             Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
         }
-        tvLocation.setAlpha(1.0f);
-        tvLocation.animate().alpha(0.5f).setDuration(400);
        // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         BlockClickFlag.setFlagTrue();
 
@@ -395,13 +373,12 @@ public class ShortestPathActivity extends Fragment
 
     @Override
     public void onMockLocationsDetected(View.OnClickListener fromView, DialogInterface.OnClickListener fromDialog) {
-        tvLocation.setText(getString(R.string.mockLocationMessage));
-        tvLocation.setOnClickListener(fromView);
+
     }
 
     @Override
     public void onError(LocationAssistant.ErrorType type, String message) {
-        tvLocation.setText(getString(R.string.error));
+
     }
 
     private void mapEvents() {
