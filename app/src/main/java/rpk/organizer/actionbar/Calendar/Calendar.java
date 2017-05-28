@@ -169,7 +169,6 @@ public class Calendar extends Fragment
                 .setBackOff(new ExponentialBackOff());
 
         getResultsFromApi(Task.GetCalendars);
-        BlockClickFlag.setFlagTrue();
     }
 
 
@@ -199,12 +198,16 @@ public class Calendar extends Fragment
     private void getResultsFromApi(Task task) {
         if (!isGooglePlayServicesAvailable()) {
             acquireGooglePlayServices();
+            BlockClickFlag.setFlagTrue();
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
+            BlockClickFlag.setFlagTrue();
         } else if (!MainActivity.isNetworkConnected(mContext)) {
             Toast.makeText(mContext, R.string.NoConnectionAVB, Toast.LENGTH_SHORT).show();
+            BlockClickFlag.setFlagTrue();
         } else {
             new MakeRequestTask(mCredential).execute(task);
+            BlockClickFlag.setFlagTrue();
         }
     }
 

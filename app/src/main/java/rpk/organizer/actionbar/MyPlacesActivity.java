@@ -319,7 +319,10 @@ public class MyPlacesActivity extends Fragment
 
     @Override
     public void onNewLocationAvailable(Location location) {
-        if (location == null) return;
+        if (location == null){
+            BlockClickFlag.setFlagTrue();
+            return;
+        }
 
         if (assistant.getBestLocation() != null && MainActivity.isNetworkConnected(mContext)) {
             String geolocation = getCompleteAddressString(location.getLatitude(), location.getLongitude());
