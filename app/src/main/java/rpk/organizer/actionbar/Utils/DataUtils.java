@@ -28,8 +28,9 @@ public class DataUtils {
 
     }
 
-    public static List<Integer> toIntList(EventsInfo eventsInfo) {
-        String out2[] = eventsInfo.getTime().split(":");
+    public static List<Integer> toIntList(String date) {
+        String out[] = date.split("T");
+        String out2[] = out[1].split(":");
         List<Integer> times = new ArrayList<Integer>();
         times.add(Integer.parseInt(out2[0]));
         times.add(Integer.parseInt(out2[1]));

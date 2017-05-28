@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.api.services.calendar.model.Event;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -360,7 +361,7 @@ public class MyPlacesActivity extends Fragment
     }
 
     @Override
-    public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
+    public void onDirectionFinderSuccess(List<Route> routes, List<Event> list) {
 
     }
 

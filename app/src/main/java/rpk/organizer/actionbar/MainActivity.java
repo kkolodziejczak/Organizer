@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.google.api.services.calendar.model.Event;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.List;
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     static public Class selectedFragmentClass = null;
     static public FragmentManager fragmentManager;
     static public PendingIntent mAlarmIntent;
-    static public List<EventsInfo> EventsInfoList = null;
+    static public List<Event> EventsInfoList = null;
 
 
     private int IsListCreated = 0;

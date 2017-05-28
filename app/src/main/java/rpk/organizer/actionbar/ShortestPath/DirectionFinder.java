@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.api.services.calendar.model.Event;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +30,7 @@ import rpk.organizer.actionbar.Calendar.EventsInfo;
 public class DirectionFinder {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
     private static final String GOOGLE_API_KEY = "AIzaSyDg1F_GeSj1x4STUVyvwVHpQv2QsY_kQPQ";
-    private List<EventsInfo> List = null;
+    private List<Event> List = null;
     private DirectionFinderListener listener;
     private String origin;
     private String destination;
@@ -40,7 +41,7 @@ public class DirectionFinder {
         this.destination = destination;
     }
 
-    public DirectionFinder(DirectionFinderListener listener, String origin, String destination, List<EventsInfo> list) {
+    public DirectionFinder(DirectionFinderListener listener, String origin, String destination, List<Event> list) {
         this.listener = listener;
         this.origin = origin;
         this.destination = destination;

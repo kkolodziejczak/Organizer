@@ -173,7 +173,7 @@ public class Calendar extends Fragment
     }
 
 
-    private void sendRequest(String dest, List<EventsInfo> list) {
+    private void sendRequest(String dest, List<Event> list) {
         if (dest == null)
             return;
         Location location = assistant.getBestLocation();
@@ -186,12 +186,6 @@ public class Calendar extends Fragment
         }
     }
 
-
-    public static List<EventsInfo> getTodaysEventList() {
-        if (MainActivity.EventsInfoList == null)
-            return null;
-        return MainActivity.EventsInfoList;
-    }
 
     /**
      * Attempt to call the API, after verifying that all the preconditions are
@@ -414,7 +408,7 @@ public class Calendar extends Fragment
                     this.task = params[0];
                     switch (params[0]) {
                         case GetFirstEvents:
-                            return getDataFromApi();
+                            return getEventDataFromApi();
                         case GetEvents:
                             return getDataFromApi();
                         case GetCalendars:
@@ -460,7 +454,31 @@ public class Calendar extends Fragment
                 eventStrings.add(
                         String.format("%s (%s)", event.getSummary(), DataUtils.toHourMin(start, ":")));
             }
-            MainActivity.EventsInfoList = EventList.getEvents();
+            return eventStrings;
+        }
+
+        private List<String> getEventDataFromApi() throws IOException {
+            List<String> eventStrings = new ArrayList<String>();
+
+//            org.joda.time.DateTime dateTime = new org.joda.time.DateTime(timeToGet.toString());
+            org.joda.time.DateTime dateTime = new org.joda.time.DateTime(new DateTime(System.currentTimeMillis()).toStringRfc3339());
+            Events events = mService.events().list(CalendarNames.get(mSpinner.getSelectedItem()))
+                    .setTimeMin(new DateTime(System.currentTimeMillis()))
+                    .setTimeMax(new DateTime(dateTime.plusDays(1).toString()))
+                    .setOrderBy("startTime")
+                    .setSingleEvents(true)
+                    .execute();
+            List<Event> items = events.getItems();
+
+            EventList.ClearToday();
+            for (Event event : items) {
+                DateTime start = event.getStart().getDateTime();
+                if (start == null)
+                    start = event.getStart().getDate();
+
+                EventList.addEventToday(event);
+            }
+            eventStrings.add("");
             return eventStrings;
         }
 
@@ -500,9 +518,9 @@ public class Calendar extends Fragment
             } else {
                 switch (task) {
                     case GetFirstEvents:
-                        MainActivity.EventsInfoList = EventList.getEvents();
-                        EventList.setID(0);
-                        sendRequest(MainActivity.EventsInfoList.get(0).getPlace(), MainActivity.EventsInfoList);
+                        MainActivity.EventsInfoList = EventList.getTodaysEvents();
+                        if (EventList.getTodaysEventsSize() != 0)
+                            sendRequest(MainActivity.EventsInfoList.get(0).getLocation(), MainActivity.EventsInfoList);
 
                         getResultsFromApi(Task.GetEvents);
                         break;
@@ -655,15 +673,15 @@ public class Calendar extends Fragment
     }
 
     @Override
-    public void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list) {
-        if (MainActivity.mAlarmIntent != null){
+    public void onDirectionFinderSuccess(List<Route> routes, List<Event> list) {
+        if (MainActivity.mAlarmIntent != null) {
             progressDialog.dismiss();
             return;
         }
-        while(list.size() == 0){
-            try{
+        while (list.size() == 0) {
+            try {
                 Thread.sleep(100);
-            }catch (Throwable t){
+            } catch (Throwable t) {
 
             }
         }
@@ -672,46 +690,37 @@ public class Calendar extends Fragment
         if (routes.size() == 0 || list.size() == 0)
             return;
 
-        Intent intent = new Intent(mContext, AlarmReceiver.class);
-        MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext, 234324243, intent, 0);
-        AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        // Date in string format
+        String Date = list.get(0).getStart().getDateTime().toStringRfc3339();
+
+        // Buffer time przed wyjściem 10 min
+        int TimeBufferInMinutes = 10;
 
         // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
-        List<Integer> time = DataUtils.toIntList(list.get(0));
+        int hourShift = list.get(0).getStart().getDateTime().getTimeZoneShift() / 60; // in hours
 
         // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
-        int duration = routes.get(0).duration.value;
+        int duration = routes.get(0).duration.value; // travel duration in sec
 
-        long millisInDay = 60 * 60 * 24 * 1000;
-        long dateOnly = (new Date().getTime() / millisInDay) * millisInDay;
+        org.joda.time.DateTime DurationTime = new org.joda.time.DateTime(Date)
+                .plusHours(hourShift)
+                .minusSeconds(duration)
+                .minusMinutes(TimeBufferInMinutes);
 
-        // data aktualna (bez czasu), TRZEBA POTEM ZMIENIC ZEBY BRALO Z EVENTU, w formacie unix
-        long clearDateUnix = new Date(dateOnly).getTime() / 1000;
+        org.joda.time.DateTime DateTimeNOW = new org.joda.time.DateTime(System.currentTimeMillis());
 
-        // czas interesujacego nas eventu
-        long eventTimeUnix = clearDateUnix + time.get(0) * 3600 + time.get(1) * 60;
+        if (DurationTime.isAfter(DateTimeNOW)) {
+            Toast.makeText(mContext, R.string.AddedNoti + " " + DurationTime.toString(), Toast.LENGTH_LONG).show();
 
+            Intent intent = new Intent(mContext, AlarmReceiver.class);
+            MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext, 234324243, intent, 0);
+            AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
-        // ustawiamy powiadomienie kilka minut przed czasem wyjscia
-        long currentTimeUnix = System.currentTimeMillis() / 1000; // w sekundach
-
-        // czas bedacy "zapasem" jaki mamy dodatkowo, poza uwzglednionym czasem podrozy
-        int bufferTime = 900;
-
-        long diffTime = eventTimeUnix - currentTimeUnix - duration - bufferTime;
-
-
-        Log.d("AktualnyCzas", String.valueOf(currentTimeUnix));
-
-        // !! jeżeli czas wystarczający to ok jak nie to informujemy o braku czasu !!
-        if (diffTime < 0)
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, DurationTime.getMillis(), MainActivity.mAlarmIntent);
+        } else {
             Toast.makeText(mContext, R.string.TooLateNoti, Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(mContext, R.string.AddedNoti, Toast.LENGTH_SHORT).show();
+        }
 
-        long whenToNotify = currentTimeUnix + diffTime;
-
-        mAlarmManager.set(AlarmManager.RTC_WAKEUP, whenToNotify, MainActivity.mAlarmIntent);
     }
 
 }

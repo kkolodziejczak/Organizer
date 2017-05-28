@@ -1,6 +1,7 @@
 package rpk.organizer.actionbar.ShortestPath;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.api.services.calendar.model.Event;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,5 +14,5 @@ import rpk.organizer.actionbar.Calendar.EventsInfo;
 public interface DirectionFinderListener {
     void onDirectionFinderStart();
     void onDirectionFinderSuccess(List<Route> route);
-    void onDirectionFinderSuccess(List<Route> routes, List<EventsInfo> list);
+    void onDirectionFinderSuccess(List<Route> routes, List<Event> list);
 }

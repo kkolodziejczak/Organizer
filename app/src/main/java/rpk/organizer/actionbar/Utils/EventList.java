@@ -11,6 +11,7 @@ import rpk.organizer.actionbar.Calendar.EventsInfo;
 public class EventList {
     private static List<EventsInfo> Events;
     private static List<Event> GoogleEvents;
+    private static List<Event> TodaysEvents;
     private static int id = 0;
 
     public static int Count(){
@@ -64,12 +65,36 @@ public class EventList {
             return new ArrayList<>();
         return GoogleEvents;
     }
+
+
     public static void setID(int i ){
         id = i;
     }
 
-    public static String getSummary() {
-        return getEventAt(id).getSummary();
+    public static void addEventToday(Event event){
+        if(TodaysEvents == null)
+            TodaysEvents = new ArrayList<>();
+        TodaysEvents.add(event);
     }
 
+    public static String getSummary() {
+        return TodaysEvents.get(0).getSummary();
+    }
+
+    public static List<Event> getTodaysEvents(){
+        if(TodaysEvents == null)
+            return new ArrayList<>();
+        return TodaysEvents;
+    }
+
+    public static void ClearToday() {
+        if(TodaysEvents != null)
+            TodaysEvents.clear();
+    }
+
+    public static int getTodaysEventsSize() {
+        if(TodaysEvents == null)
+            return 0;
+        return TodaysEvents.size();
+    }
 }
