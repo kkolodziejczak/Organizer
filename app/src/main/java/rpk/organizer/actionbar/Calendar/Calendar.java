@@ -696,27 +696,23 @@ public class Calendar extends Fragment
         // Buffer time przed wyjściem 10 min
         int TimeBufferInMinutes = 10;
 
-        // Pobieramy pierwsze zdarzenie z brzegu (oczywiście nie te które już się odbyły)
-        int hourShift = list.get(0).getStart().getDateTime().getTimeZoneShift() / 60; // in hours
-
         // Sprwdzamy jak tam dojechać w chwili aktualnej.(pobieramy czas dojazdu)
         int duration = routes.get(0).duration.value; // travel duration in sec
 
-        org.joda.time.DateTime DurationTime = new org.joda.time.DateTime(Date)
-                .plusHours(hourShift)
+        org.joda.time.DateTime TimeToNotyfi = new org.joda.time.DateTime(Date)
                 .minusSeconds(duration)
                 .minusMinutes(TimeBufferInMinutes);
 
         org.joda.time.DateTime DateTimeNOW = new org.joda.time.DateTime(System.currentTimeMillis());
 
-        if (DurationTime.isAfter(DateTimeNOW)) {
-            Toast.makeText(mContext, R.string.AddedNoti + " " + DurationTime.toString(), Toast.LENGTH_LONG).show();
+        if (TimeToNotyfi.isAfter(DateTimeNOW)) {
+            Toast.makeText(mContext, R.string.AddedNoti + " " + TimeToNotyfi.toString(), Toast.LENGTH_LONG).show();
 
             Intent intent = new Intent(mContext, AlarmReceiver.class);
             MainActivity.mAlarmIntent = PendingIntent.getBroadcast(mContext, 234324243, intent, 0);
             AlarmManager mAlarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
-            mAlarmManager.set(AlarmManager.RTC_WAKEUP, DurationTime.getMillis(), MainActivity.mAlarmIntent);
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, TimeToNotyfi.getMillis(), MainActivity.mAlarmIntent);
         } else {
             Toast.makeText(mContext, R.string.TooLateNoti, Toast.LENGTH_LONG).show();
         }
