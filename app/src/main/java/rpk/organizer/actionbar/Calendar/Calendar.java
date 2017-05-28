@@ -202,7 +202,7 @@ public class Calendar extends Fragment
         } else if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         } else if (!MainActivity.isNetworkConnected(mContext)) {
-            Toast.makeText(mContext, "No network connection available.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.NoConnectionAVB, Toast.LENGTH_SHORT).show();
         } else {
             new MakeRequestTask(mCredential).execute(task);
         }
