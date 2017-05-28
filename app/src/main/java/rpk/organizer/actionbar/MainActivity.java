@@ -72,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (extras.getBoolean("NotiClick"))
             {
-                AlarmReceiver.ringtone.stop();
+                if(AlarmReceiver.ringtone != null)
+                    AlarmReceiver.ringtone.stop();
                 NotificationManager mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 mNotifyMgr.cancelAll();
                 mAlarmIntent = null;
