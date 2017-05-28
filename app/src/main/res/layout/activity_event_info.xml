@@ -107,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Stan" />
+                android:text="@string/EventInfostatus" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Prywatność" />
+                android:text="@string/EventInfoprivacy" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -156,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Przypomnienia (Powiadomienie)" />
+                android:text="@string/EventInfonotifications_default" />
 
             <TextView
                 android:layout_width="wrap_content"

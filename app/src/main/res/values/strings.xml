@@ -5,8 +5,8 @@
     <string name="test2">Test2</string>
     <string name="test3">Test3</string>
     <string name="test4">Test4</string>
-    <string name="ReminderDefault">Brak</string>
-    <string name="ReminderCustom">Custo</string>
+    <string name="ReminderDefault">Default</string>
+    <string name="ReminderCustom">Custom</string>
     <string name="CalendarString">Calendar :\u0020</string>
     <string name="empty">--</string>
     <string name="ok">OK</string>
@@ -33,4 +33,7 @@
     <string name="TooLateNoti">Nie zdążysz! teleportuj się!</string>
     <string name="AddedNoti">Dodano powiadomienie</string>
     <string name="NoConnectionAVB">No network connection available.</string>
+    <string name="EventInfostatus">Status</string>
+    <string name="EventInfoprivacy">Privacy</string>
+    <string name="EventInfonotifications_default">Notifications (default)</string>
 </resources>
