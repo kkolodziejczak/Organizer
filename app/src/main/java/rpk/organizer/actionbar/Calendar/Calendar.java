@@ -177,12 +177,14 @@ public class Calendar extends Fragment
         if (dest == null)
             return;
         Location location = assistant.getBestLocation();
-        String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude()); // pobiera aktualną pozycję
-        String destination = dest; // Koniec
-        try {
-            new DirectionFinder(this, origin, destination, list).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        if (location != null && MainActivity.isNetworkConnected(mContext)) {
+            String origin = getCompleteAddressString(location.getLatitude(), location.getLongitude()); // pobiera aktualną pozycję
+            String destination = dest; // Koniec
+            try {
+                new DirectionFinder(this, origin, destination, list).execute();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         }
     }
 
