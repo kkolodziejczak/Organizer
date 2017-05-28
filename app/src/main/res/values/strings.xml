@@ -13,15 +13,13 @@
     <string name="cancel">No</string>
     <string name="error">Error</string>
     <string name="permissionExplanation">Look, we really need your location because of maps&#8230;</string>
-    <string name="switchOnLocationShort">Oops - you seem to have disabled location services at the moment. This app is
-        really cool and needs your location in order to work properly. To continue, please click on "OK".</string>
-    <string name="switchOnLocationLong">Oops - you seem to have disabled location services at the moment. This app is
-        really cool and needs your location in order to work properly. To continue, please click on "OK" and enable
-        location. If you\'re worried about battery usage, be sure to switch to energy saving mode. </string>
-    <string name="permissionPermanentlyDeclined">Bummer! You have permanently declined the location permission. But
-        this app is so cool and needs your location because&#8230; you know. Click "OK" to change the permission
-        settings.</string>
-    <string name="mockLocationMessage">Stop\nMocking\nMe</string>
+    <string name="switchOnLocationShort">Oops - you seem to have disabled location services at the moment. This app
+        really needs your location in order to work properly. To continue, please click on "OK".</string>
+    <string name="switchOnLocationLong">Oops - you seem to have disabled location services at the moment. This app
+        really needs your location in order to work properly. To continue, please click on "OK" and enable
+        location.</string>
+    <string name="permissionPermanentlyDeclined">You have permanently declined the location permission.
+        Please change your permission settings.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -36,4 +34,11 @@
     <string name="EventInfostatus">Status</string>
     <string name="EventInfoprivacy">Privacy</string>
     <string name="EventInfonotifications_default">Notifications (default)</string>
+    <string name="find_path_btn">Find path</string>
+    <string name="start_point">Enter the starting point</string>
+    <string name="end_point">Enter the end point</string>
+    <string name="finding_direction_content">Finding direction...</string>
+    <string name="finding_direction_title">Please wait.</string>
+    <string name="place_added">Place added</string>
+    <string name="place_exists">Place already exists</string>
 </resources>

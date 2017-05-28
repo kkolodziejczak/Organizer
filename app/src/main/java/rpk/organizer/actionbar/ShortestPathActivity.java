@@ -218,11 +218,11 @@ public class ShortestPathActivity extends Fragment
         String destination = etDestination.getText().toString();
 
         if (origin.isEmpty()) {
-            Toast.makeText(getContext(), "Podaj adres początkowy", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.start_point, Toast.LENGTH_SHORT).show();
             return;
         }
         if (destination.isEmpty()) {
-            Toast.makeText(getContext(), "Podaj adres końcowy", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.end_point, Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -364,7 +364,7 @@ public class ShortestPathActivity extends Fragment
             }
 
         } else {
-            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.NoConnectionAVB,Toast.LENGTH_SHORT).show();
         }
        // ((AppCompatActivity) getActivity()).getSupportActionBar().show();
         BlockClickFlag.setFlagTrue();
@@ -426,8 +426,8 @@ public class ShortestPathActivity extends Fragment
 
     @Override
     public void onDirectionFinderStart() {
-        progressDialog = ProgressDialog.show(getContext(), "Please wait.",
-                "Finding direction..!", true);
+        progressDialog = ProgressDialog.show(getContext(), getString(R.string.finding_direction_title),
+                getString(R.string.finding_direction_content), true);
 
         if (originMarkers != null) {
             for (Marker marker : originMarkers) {
@@ -505,14 +505,14 @@ public class ShortestPathActivity extends Fragment
     @Override
     public void onInfoWindowClick(Marker marker) {
         if(!PlacesHandler.isAlreadyAdded(marker.getTitle().trim())) {
-            Toast.makeText(getContext(), "Place added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.place_added, Toast.LENGTH_SHORT).show();
             String czas = "0:00";
             Place pl = new Place(marker.getTitle().trim(), marker.getTitle(), czas);
             PlacesHandler.addPlace(pl);
             PlacesHandler.db.dodaj(pl);
             PlacesHandler.getAdapter().notifyDataSetChanged();
         }else {
-            Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.place_exists, Toast.LENGTH_SHORT).show();
         }
     }
 
