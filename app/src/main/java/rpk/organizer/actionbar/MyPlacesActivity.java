@@ -128,7 +128,7 @@ public class MyPlacesActivity extends Fragment
                         Place place;
                         if (edit.getText().toString().isEmpty()) {
                             if (edit2.getText().toString().isEmpty()) {
-                                Toast.makeText(getContext(), "Place can not be empty", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.EmptyError, Toast.LENGTH_SHORT).show();
                             } else {
                                 if (!PlacesHandler.isAlreadyAdded(edit2.getText().toString())) {
                                     place = new Place(edit2.getText().toString(), edit2.getText().toString(), czas);
@@ -136,12 +136,12 @@ public class MyPlacesActivity extends Fragment
                                     adapter.notifyDataSetChanged();
                                     PlacesHandler.db.dodaj(place);
                                 } else {
-                                    Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.existsError, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         } else {
                             if (edit2.getText().toString().isEmpty()) {
-                                Toast.makeText(getContext(), "Place destination can not be empty", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), R.string.DestinationEmpty, Toast.LENGTH_SHORT).show();
                             } else {
                                 if (PlacesHandler.isAlreadyAdded(edit.getText().toString())) {
                                     place = new Place(edit.getText().toString(), edit2.getText().toString(), czas);
@@ -149,7 +149,7 @@ public class MyPlacesActivity extends Fragment
                                     adapter.notifyDataSetChanged();
                                     PlacesHandler.db.dodaj(place);
                                 } else {
-                                    Toast.makeText(getContext(), "Place already exists", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(),R.string.existsError, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -327,7 +327,7 @@ public class MyPlacesActivity extends Fragment
             LatLng myPosition = new LatLng(location.getLatitude(), location.getLongitude());
 
         } else {
-            Toast.makeText(mContext,"No network connection available.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext,R.string.NoConnectionAVB,Toast.LENGTH_SHORT).show();
         }
         BlockClickFlag.setFlagTrue();
     }

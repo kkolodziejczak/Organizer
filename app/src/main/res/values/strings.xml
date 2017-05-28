@@ -49,4 +49,7 @@
     <string name="destination_address">Destination address</string>
     <string name="place_name">Place name</string>
     <string name="add">Add</string>
+    <string name="EmptyError">Place can not be empty</string>
+    <string name="existsError">Place already exists</string>
+    <string name="DestinationEmpty">Place destination can not be empty</string>
 </resources>
