@@ -9,5 +9,6 @@
     <color name="oczojebnyBlue">#80FFFF</color>
     <color name="FontColor">#212121</color>
     <color name="TitleFontColor">#0084ff</color>
+    <color name="red">#ff0000</color>
 
 </resources>

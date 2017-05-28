@@ -17,7 +17,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:id="@+id/customDialogCancel"
-            android:text="Cancel" />
+            android:backgroundTint="@color/red"
+            android:text="@string/cancelOperation" />
 
 
         <Button
@@ -25,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:id="@+id/customDialogOk"
-            android:text="Delete" />
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/delete" />
     </RelativeLayout>
 </LinearLayout>

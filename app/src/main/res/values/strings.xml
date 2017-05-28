@@ -1,5 +1,5 @@
 <resources>
-    <string name="title_activity_maps">Mapy</string>
+    <string name="title_activity_maps">Maps</string>
     <string name="app_name">Time Guide</string>
     <string name="test1">Test1</string>
     <string name="test2">Test2</string>
@@ -28,8 +28,8 @@
     <string name="dialog_title">NEW PLACE</string>
     <string name="dialog_del">Are you sure ?</string>
     <string name="NotificationTitle">Time Guide - Notification</string>
-    <string name="TooLateNoti">Nie zdążysz! teleportuj się!</string>
-    <string name="AddedNoti">Dodano powiadomienie</string>
+    <string name="TooLateNoti">You will not be on time! Quick!You must use teleportation!</string>
+    <string name="AddedNoti">Notification Added</string>
     <string name="NoConnectionAVB">No network connection available.</string>
     <string name="EventInfostatus">Status</string>
     <string name="EventInfoprivacy">Privacy</string>
@@ -37,10 +37,16 @@
     <string name="find_path_btn">Find path</string>
     <string name="start_point">Enter the starting point</string>
     <string name="end_point">Enter the end point</string>
-    <string name="finding_direction_content">Finding direction...</string>
+    <string name="finding_direction_content">Finding direction…</string>
     <string name="finding_direction_title">Please wait.</string>
     <string name="place_added">Place added</string>
     <string name="place_exists">Place already exists</string>
     <string name="google_places_connected">Google Places API connected.</string>
     <string name="google_places_suspended">Google Places API connection suspended.</string>
+    <string name="delete_my_place">delete my place</string>
+    <string name="cancelOperation">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="destination_address">Destination address</string>
+    <string name="place_name">Place name</string>
+    <string name="add">Add</string>
 </resources>

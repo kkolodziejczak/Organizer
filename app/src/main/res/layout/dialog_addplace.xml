@@ -12,12 +12,12 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Destination address"
+        android:hint="@string/destination_address"
         android:id="@+id/etDestination" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Place name"
+        android:hint="@string/place_name"
         android:id="@+id/placeName" />
 
     <RelativeLayout
@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:id="@+id/customDialogCancel"
-            android:text="Cancel" />
+            android:backgroundTint="#ff0000"
+            android:text="@string/cancelOperation" />
 
 
         <Button
@@ -38,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:id="@+id/customDialogOk"
-            android:text="Add" />
+            android:backgroundTint="@color/colorAccent"
+            android:text="@string/add" />
     </RelativeLayout>
 </LinearLayout>
