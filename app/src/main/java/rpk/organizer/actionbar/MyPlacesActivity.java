@@ -143,7 +143,7 @@ public class MyPlacesActivity extends Fragment
                             if (edit2.getText().toString().isEmpty()) {
                                 Toast.makeText(getContext(), R.string.DestinationEmpty, Toast.LENGTH_SHORT).show();
                             } else {
-                                if (PlacesHandler.isAlreadyAdded(edit.getText().toString())) {
+                                if (!PlacesHandler.isAlreadyAdded(edit.getText().toString())) {
                                     place = new Place(edit.getText().toString(), edit2.getText().toString(), czas);
                                     PlacesHandler.addPlace(place);
                                     adapter.notifyDataSetChanged();
