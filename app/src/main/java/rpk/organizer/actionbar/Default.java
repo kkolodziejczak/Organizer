@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class Default extends Fragment implements View.OnClickListener{
+public class Default extends Fragment {
     public Button res1, res2,res3;
 
     @Nullable
@@ -27,31 +27,6 @@ public class Default extends Fragment implements View.OnClickListener{
 
 
         Bundle bundle = getArguments();
-        res1 = (Button) getActivity().findViewById(R.id.button5);
-        res1.setOnClickListener(this);
     }
 
-
-    @Override
-    public void onClick(View view) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        Fragment frag = null;
-        Class fragmentClass;
-        fragmentClass = AlarmActivity.class;
-        switch (view.getId()) {
-            case R.id.button5:
-//                intent = new Intent(getActivity(), ShortesPathActivity.class);
-//                startActivity(intent);
-                fragmentClass = AlarmActivity.class;
-                try {
-                    frag = (Fragment) fragmentClass.newInstance();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                MainActivity.selectedFragmentClass = fragmentClass;
-                fragmentManager.beginTransaction().replace(R.id.frame, frag).addToBackStack("ALARM").commit();
-
-                break;
-        }
-    }
 }

@@ -1,13 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="3"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <Button
-        android:id="@+id/button5"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="RADEK TESTUJE" />
-    </LinearLayout>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_to_the_time_guide_app"
+            android:textSize="22sp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/this_short_introduction_will_show_you_how_to_navigate_through_the_app"
+            android:textSize="16sp"
+            android:layout_below="@+id/textView"
+            android:gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/toolbarx"
+            android:contentDescription="@string/toolbar_setup"  />
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/click_on_toolbar_items_in_order_to_access_shortest_path_calendar_and_my_places_views"
+            android:textSize="16sp"
+            android:layout_below="@+id/imageView"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shortest_path"
+            android:textSize="20sp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/textView3"
+            android:background="@color/colorPrimary"
+            android:gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/shortx"
+            android:contentDescription="@string/image_showing_layout_of_the_maps_view" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/this_part_of_the_app_lets_you_freely_control_the_map_in_order_to_find_shortest_path_you_can_either_type_them_manually_or_use_google_autocomplete_hints_or_click_on_your_location_at_the_top_of_a_screen_in_order_to_fill_the_form_automatically_additionaly_when_you_hold_your_finger_on_the_map_marker_will_be_created_with_te_clicked_position_address_there_will_be_also_marker_showing_your_current_position_when_you_will_send_request_both_starting_point_and_finifh_point_markers_will_be_added_when_you_tap_on_the_marker_you_can_see_the_marker_address_when_you_click_on_this_information_the_adrress_will_be_automatically_added_to_your_favourite_places"
+            android:textSize="16sp"
+            android:layout_below="@+id/imageView2"/>
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/calendar"
+            android:textSize="20sp"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/textView5"
+            android:gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView6"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/calendarx"
+            android:contentDescription="@string/image_showing_calendar_view" />
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/at_the_top_of_a_screen_you_can_select_your_calendars_connected_to_google_and_our_app_will_synchronize_the_events_with_the_location_so_you_will_always_be_on_time_dynamic_notifications_will_make_sure_of_that_at_the_bottom_of_a_screen_is_a_list_with_the_events_fors_current_day_which_you_can_click_on_in_order_to_access_the_details"
+            android:textSize="16sp"
+            android:layout_below="@+id/imageView3"/>
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/my_favourite_places"
+            android:textSize="20sp"
+            android:background="@color/colorPrimary"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/textView7"
+            android:gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView8"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/placesx"
+            android:contentDescription="@string/image_showing_layout_of_the_maps_view" />
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/this_part_consists_of_elements_resembling_your_saved_favourite_places_if_you_swipe_down_on_the_screen_you_can_get_the_amount_of_time_you_will_need_in_order_to_reach_certain_place_from_your_current_loaction_if_you_click_on_one_of_the_elemts_it_will_send_you_to_the_map_with_autocompleted_destination_so_you_can_just_search_for_the_route_also_if_you_will_click_on_the_x_symbol_you_can_delete_the_place_don_t_worry_if_you_missclick_it_is_two_step_process_on_the_bottom_left_there_is_a_button_that_opens_a_dialog_for_creating_new_places"
+            android:textSize="16sp"
+            android:layout_below="@+id/imageView4"/>
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/good_luck_and_have_fun_may_the_time_and_organization_be_with_you"
+            android:textSize="22sp"
+            android:background="@color/blueBackground"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/textView9"
+            android:gravity="center"/>
+
+
+    </RelativeLayout>
+</ScrollView>
